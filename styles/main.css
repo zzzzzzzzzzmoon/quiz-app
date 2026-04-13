@@ -28,12 +28,9 @@ body {
 }
 
 .version-badge {
-  position: fixed;
-  top: 12px;
-  right: 12px;
-  z-index: 50;
   display: inline-flex;
   align-items: center;
+  justify-self: end;
   border: 1px solid var(--border);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.88);
@@ -575,15 +572,6 @@ th {
 }
 
 @media (max-width: 560px) {
-  .version-badge {
-    top: auto;
-    right: 50%;
-    bottom: 8px;
-    transform: translateX(50%);
-    font-size: 11px;
-    padding: 5px 9px;
-  }
-
   .container {
     padding: 8px;
   }
