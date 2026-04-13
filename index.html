@@ -473,7 +473,7 @@
         <hr style="border-color: var(--border); margin: 18px 0;">
 
         <h2>題庫管理</h2>
-        <p class="small">預設題庫來自 <code>5-測驗</code> 的每週 PDF。後續若要新增第 8 週、第 9 週，請直接編輯 <code>data/weekly-question-bank.js</code>。下方 JSON 區塊是進階覆蓋模式。</p>
+        <p class="small">預設題庫來自 <code>5-測驗</code> 的每週 PDF；若要加一整批 GPT 產生的自訂題目，請編輯 <code>data/custom-question-bank.js</code>。下方 JSON 區塊則是進階覆蓋模式。</p>
 
         <div class="row">
           <label for="importArea">匯入題庫 JSON</label>
@@ -496,7 +496,7 @@
           <button id="resetQuestionsBtn" class="btn-danger">還原每週預設題庫</button>
         </div>
 
-        <p class="footer-note">維護建議：平常只改 <code>data/weekly-question-bank.js</code>；真的要整包覆蓋題庫時，再使用這裡的 JSON 匯入。</p>
+        <p class="footer-note">維護建議：課程週次改 <code>data/weekly-question-bank.js</code>；GPT 生成的一整批自訂題目貼進 <code>data/custom-question-bank.js</code>；真的要整包覆蓋題庫時，再使用這裡的 JSON 匯入。</p>
       </aside>
 
       <main>
@@ -505,9 +505,9 @@
           <ol style="line-height: 1.9; padding-left: 20px;">
             <li>先在左側選擇 <strong>週次</strong>，例如第 3 週或第 4 週。</li>
             <li>按 <strong>開始刷題</strong>，做完一輪後再用 <strong>只刷錯題</strong> 複習。</li>
-            <li>未來新增新週次時，只要補進 <strong>data/weekly-question-bank.js</strong>。</li>
+            <li>未來新增新週次時改 <strong>data/weekly-question-bank.js</strong>；新增 GPT 自訂題時改 <strong>data/custom-question-bank.js</strong>。</li>
           </ol>
-          <div class="small">這個版本不需要安裝任何套件。只要維護每週題庫資料檔並重新部署，頁面就會自動帶入新版預設題目。</div>
+          <div class="small">這個版本不需要安裝任何套件。只要維護題庫資料檔並重新部署，頁面就會自動帶入新版預設題目。</div>
         </section>
 
         <section id="quizCard" class="card hidden">
@@ -591,6 +591,7 @@
   </div>
 
   <script src="data/weekly-question-bank.js"></script>
+  <script src="data/custom-question-bank.js"></script>
   <script>
     const LEGACY_DEFAULT_QUESTION_IDS = [
       'nlp-001',
@@ -603,8 +604,11 @@
       'nlp-008'
     ];
 
-    const DEFAULT_QUESTION_SET_VERSION = window.WEEKLY_QUESTION_BANK_VERSION || '2026-04-13';
-    const DEFAULT_QUESTIONS = (window.WEEKLY_QUESTION_BANK || []).flatMap(week =>
+    const WEEKLY_QUESTION_SET_VERSION = window.WEEKLY_QUESTION_BANK_VERSION || '2026-04-13';
+    const CUSTOM_QUESTION_SET_VERSION = window.CUSTOM_QUESTION_BANK_VERSION || 'no-custom-bank';
+    const DEFAULT_QUESTION_SET_VERSION = `${WEEKLY_QUESTION_SET_VERSION}__${CUSTOM_QUESTION_SET_VERSION}`;
+
+    const WEEKLY_QUESTIONS = (window.WEEKLY_QUESTION_BANK || []).flatMap(week =>
       week.questions.map(item => ({
         ...item,
         category: week.label,
@@ -613,6 +617,13 @@
         sourceFile: week.sourceFile
       }))
     );
+
+    const CUSTOM_QUESTIONS = (window.CUSTOM_QUESTION_BANK || []).map(item => ({
+      ...item,
+      sourceFile: item.sourceFile || 'data/custom-question-bank.js'
+    }));
+
+    const DEFAULT_QUESTIONS = [...WEEKLY_QUESTIONS, ...CUSTOM_QUESTIONS];
 
     const STORAGE_KEYS = {
       questions: 'quiz_app_questions_v1',
