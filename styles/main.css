@@ -444,6 +444,77 @@ button:disabled {
   border-radius: 16px;
 }
 
+.summary-mobile-list {
+  display: none;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.summary-result-card {
+  display: grid;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 12px;
+}
+
+.summary-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.summary-card-index {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.summary-status {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.summary-status-ok {
+  background: rgba(52, 199, 89, 0.12);
+  color: #1c8d42;
+}
+
+.summary-status-bad {
+  background: rgba(255, 59, 48, 0.10);
+  color: #c9342c;
+}
+
+.summary-card-question {
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.summary-card-line {
+  display: grid;
+  gap: 4px;
+}
+
+.summary-card-label {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.summary-card-value {
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
 table {
   width: 100%;
   min-width: 640px;
@@ -505,8 +576,10 @@ th {
 
 @media (max-width: 560px) {
   .version-badge {
-    top: 8px;
-    right: 8px;
+    top: auto;
+    right: 50%;
+    bottom: 8px;
+    transform: translateX(50%);
     font-size: 11px;
     padding: 5px 9px;
   }
@@ -541,5 +614,13 @@ th {
     flex-basis: 108px;
     width: 108px;
     max-width: 108px;
+  }
+
+  .table-wrap {
+    display: none;
+  }
+
+  .summary-mobile-list {
+    display: grid;
   }
 }

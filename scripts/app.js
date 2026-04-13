@@ -61,6 +61,7 @@ const els = {
   summaryAccuracy: document.getElementById('summaryAccuracy'),
   summaryWrong: document.getElementById('summaryWrong'),
   summaryTableBody: document.getElementById('summaryTableBody'),
+  summaryMobileList: document.getElementById('summaryMobileList'),
   retryWrongBtn: document.getElementById('retryWrongBtn'),
   captureBtn: document.getElementById('captureBtn')
 };
@@ -325,6 +326,26 @@ function finishSession() {
       <td>${String.fromCharCode(65 + result.correctIndex)}. ${escapeHtml(result.correctText)}</td>
       <td>${result.isCorrect ? '✅ 正確' : '❌ 錯誤'}</td>
     </tr>
+  `).join('');
+
+  els.summaryMobileList.innerHTML = currentSession.results.map((result, index) => `
+    <article class="summary-result-card">
+      <div class="summary-card-top">
+        <div class="summary-card-index">第 ${index + 1} 題</div>
+        <div class="summary-status ${result.isCorrect ? 'summary-status-ok' : 'summary-status-bad'}">
+          ${result.isCorrect ? '✅ 正確' : '❌ 錯誤'}
+        </div>
+      </div>
+      <div class="summary-card-question">${escapeHtml(result.question)}</div>
+      <div class="summary-card-line">
+        <div class="summary-card-label">你的答案</div>
+        <div class="summary-card-value">${String.fromCharCode(65 + result.selectedIndex)}. ${escapeHtml(result.selectedText)}</div>
+      </div>
+      <div class="summary-card-line">
+        <div class="summary-card-label">正確答案</div>
+        <div class="summary-card-value">${String.fromCharCode(65 + result.correctIndex)}. ${escapeHtml(result.correctText)}</div>
+      </div>
+    </article>
   `).join('');
 
   const wrongQueue = currentSession.results
