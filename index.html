@@ -177,6 +177,10 @@
       gap: 8px;
     }
 
+    .btn-group-single {
+      grid-template-columns: 1fr;
+    }
+
     .btn-group-3 {
       display: grid;
       grid-template-columns: 1fr;
@@ -266,16 +270,18 @@
     }
 
     .focus-actions {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
       gap: 8px;
       width: auto;
     }
 
     .focus-actions button {
-      min-height: 42px;
-      padding: 10px 12px;
-      font-size: 14px;
+      min-height: 0;
+      padding: 8px 12px;
+      font-size: 13px;
+      border-radius: 999px;
     }
 
     .focus-header > .focus-actions {
@@ -283,19 +289,19 @@
     }
 
     .progress-wrap {
-      margin: 0 0 6px;
-    }
-
-    .progress-info {
       display: flex;
-      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 6px;
       color: var(--muted);
       font-size: 13px;
-      margin-bottom: 4px;
     }
 
     .progress-bar {
-      width: 100%;
+      flex: 0 0 140px;
+      width: 140px;
+      min-width: 96px;
+      max-width: 140px;
       height: 10px;
       background: rgba(245, 247, 251, 0.95);
       border-radius: 999px;
@@ -484,6 +490,9 @@
       .btn-group {
         grid-template-columns: 1fr 1fr;
       }
+      .btn-group-single {
+        grid-template-columns: 1fr;
+      }
       .btn-group-3 {
         grid-template-columns: repeat(3, 1fr);
       }
@@ -516,13 +525,14 @@
       .inline-hint {
         text-align: left;
       }
-      .focus-actions,
-      .focus-header > .focus-actions {
-        width: 100%;
+      .progress-wrap {
+        gap: 8px;
+        font-size: 12px;
       }
-      .progress-info {
-        flex-direction: column;
-        gap: 4px;
+      .progress-bar {
+        flex-basis: 108px;
+        width: 108px;
+        max-width: 108px;
       }
     }
   </style>
@@ -553,7 +563,7 @@
           </select>
         </div>
 
-        <div class="btn-group">
+        <div class="btn-group btn-group-single">
           <button id="startBtn" class="btn-primary">開始刷題</button>
         </div>
       </section>
@@ -629,13 +639,11 @@
       </div>
 
       <div id="quizProgressWrap" class="progress-wrap hidden">
-        <div class="progress-info">
-          <span id="progressText">第 1 / 5 題</span>
-          <span id="scoreText">目前得分：0</span>
-        </div>
+        <span id="progressText">第 1 / 5 題</span>
         <div class="progress-bar">
           <div class="progress-fill" id="progressFill"></div>
         </div>
+        <span id="scoreText">目前得分：0</span>
       </div>
 
       <section id="quizCard" class="card hidden">
@@ -737,11 +745,13 @@
       questions: 'quiz_app_questions_v1',
       questionSource: 'quiz_app_question_source_v1',
       defaultVersion: 'quiz_app_default_version_v1',
-      progress: 'quiz_app_progress_v1'
+      progress: 'quiz_app_progress_v1',
+      sessions: 'quiz_app_sessions_v1'
     };
 
     let questions = loadQuestions();
     let progress = loadProgress();
+    let sessionHistory = loadSessionHistory();
 
     let currentSession = {
       queue: [],
@@ -894,6 +904,27 @@
       localStorage.setItem(STORAGE_KEYS.progress, JSON.stringify(progress));
     }
 
+    function loadSessionHistory() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEYS.sessions);
+        if (!raw) return [];
+        const data = JSON.parse(raw);
+        if (!Array.isArray(data)) return [];
+        return data.filter(item =>
+          item &&
+          typeof item.total === 'number' &&
+          typeof item.correct === 'number' &&
+          typeof item.accuracy === 'number'
+        );
+      } catch {
+        return [];
+      }
+    }
+
+    function saveSessionHistory() {
+      localStorage.setItem(STORAGE_KEYS.sessions, JSON.stringify(sessionHistory));
+    }
+
     function shuffle(arr) {
       const copy = [...arr];
       for (let i = copy.length - 1; i > 0; i--) {
@@ -918,15 +949,15 @@
 
     function updateGlobalStats() {
       els.statTotal.textContent = questions.length;
-      const values = Object.values(progress);
-      const totalAnswered = values.reduce((sum, item) => sum + (item.answered || 0), 0);
-      const totalCorrect = values.reduce((sum, item) => sum + (item.correct || 0), 0);
+      const totalSessions = sessionHistory.length;
+      const averageAccuracy = totalSessions
+        ? Math.round(sessionHistory.reduce((sum, item) => sum + item.accuracy, 0) / totalSessions)
+        : 0;
       const totalWrongQuestions = getWrongQuestionCount();
-      const accuracy = totalAnswered ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
 
       els.statWrong.textContent = totalWrongQuestions;
-      els.statAnswered.textContent = totalAnswered;
-      els.statAccuracy.textContent = accuracy + '%';
+      els.statAnswered.textContent = totalSessions;
+      els.statAccuracy.textContent = averageAccuracy + '%';
     }
 
     function getCategoryPool(category = els.categorySelect.value) {
@@ -1103,6 +1134,7 @@
         correctIndex: q.answer,
         selectedText: q.options[selectedIndex],
         correctText: q.options[q.answer],
+        explanation: q.explanation,
         isCorrect
       });
     }
@@ -1129,6 +1161,17 @@
       els.summaryCorrect.textContent = correct;
       els.summaryWrong.textContent = wrong;
       els.summaryAccuracy.textContent = accuracy + '%';
+
+      sessionHistory.push({
+        timestamp: new Date().toISOString(),
+        total,
+        correct,
+        accuracy,
+        category: els.quizCategoryBadge.textContent,
+        mode: els.quizModeBadge.textContent
+      });
+      saveSessionHistory();
+      updateGlobalStats();
 
       els.summaryTableBody.innerHTML = currentSession.results.map((r, idx) => {
         return `
@@ -1183,44 +1226,189 @@
       }
     }
 
+    function wrapCanvasText(ctx, text, maxWidth) {
+      const lines = [];
+      const paragraphs = String(text).split('\n');
+
+      paragraphs.forEach(paragraph => {
+        const words = paragraph.split(/\s+/).filter(Boolean);
+        if (!words.length) {
+          lines.push('');
+          return;
+        }
+
+        let current = '';
+        words.forEach(word => {
+          const next = current ? `${current} ${word}` : word;
+          if (ctx.measureText(next).width <= maxWidth) {
+            current = next;
+            return;
+          }
+
+          if (current) {
+            lines.push(current);
+            current = '';
+          }
+
+          let fragment = '';
+          [...word].forEach(char => {
+            const candidate = fragment + char;
+            if (ctx.measureText(candidate).width > maxWidth && fragment) {
+              lines.push(fragment);
+              fragment = char;
+            } else {
+              fragment = candidate;
+            }
+          });
+          current = fragment;
+        });
+
+        if (current) lines.push(current);
+      });
+
+      return lines.length ? lines : [''];
+    }
+
+    function drawCanvasTextBlock(ctx, lines, x, y, lineHeight, color) {
+      ctx.fillStyle = color;
+      lines.forEach((line, index) => {
+        ctx.fillText(line, x, y + index * lineHeight);
+      });
+      return y + lines.length * lineHeight;
+    }
+
+    function exportSessionAsImage() {
+      if (!currentSession.results.length) {
+        alert('請先完成一輪作答，再匯出本輪截圖。');
+        return;
+      }
+
+      const total = currentSession.queue.length;
+      const correct = currentSession.score;
+      const wrong = total - correct;
+      const accuracy = total ? Math.round((correct / total) * 100) : 0;
+      const width = 1280;
+      const cardWidth = width - 120;
+      const textWidth = cardWidth - 72;
+      const baseRowGap = 24;
+      const statCardWidth = (cardWidth - 24) / 2;
+
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      const rowLayouts = currentSession.results.map((result, index) => {
+        ctx.font = '700 30px -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif';
+        const questionLines = wrapCanvasText(ctx, `${index + 1}. ${result.question}`, textWidth);
+        ctx.font = '500 24px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
+        const answerLines = wrapCanvasText(ctx, `你的答案：${String.fromCharCode(65 + result.selectedIndex)}. ${result.selectedText}`, textWidth);
+        const correctLines = wrapCanvasText(ctx, `正確答案：${String.fromCharCode(65 + result.correctIndex)}. ${result.correctText}`, textWidth);
+        const explanationLines = wrapCanvasText(ctx, `解析：${result.explanation}`, textWidth);
+        const rowHeight = 52 + questionLines.length * 40 + answerLines.length * 32 + correctLines.length * 32 + explanationLines.length * 32 + 68;
+        return { result, questionLines, answerLines, correctLines, explanationLines, rowHeight };
+      });
+
+      const contentHeight = rowLayouts.reduce((sum, row) => sum + row.rowHeight + baseRowGap, 0);
+      const height = 300 + 180 + 72 + contentHeight + 60;
+      canvas.width = width;
+      canvas.height = height;
+
+      const gradient = ctx.createLinearGradient(0, 0, width, height);
+      gradient.addColorStop(0, '#f8f9fd');
+      gradient.addColorStop(1, '#eef2fa');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, width, height);
+
+      ctx.fillStyle = '#111827';
+      ctx.font = '700 52px -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif';
+      ctx.fillText('本輪結果截圖', 60, 86);
+
+      ctx.fillStyle = '#6b7280';
+      ctx.font = '26px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
+      ctx.fillText(`匯出時間 ${new Date().toLocaleString('zh-TW')}`, 60, 126);
+
+      const badges = [els.quizCategoryBadge.textContent, els.quizModeBadge.textContent];
+      let badgeX = 60;
+      badges.forEach(label => {
+        ctx.font = '700 22px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
+        const badgeWidth = ctx.measureText(label).width + 40;
+        drawRoundedRect(ctx, badgeX, 156, badgeWidth, 48, 24, 'rgba(10,132,255,0.12)', 'rgba(10,132,255,0.16)');
+        ctx.fillStyle = '#0065d1';
+        ctx.fillText(label, badgeX + 20, 187);
+        badgeX += badgeWidth + 16;
+      });
+
+      const stats = [
+        { label: '本輪題數', value: `${total}` },
+        { label: '答對題數', value: `${correct}` },
+        { label: '正確率', value: `${accuracy}%` },
+        { label: '錯題數', value: `${wrong}` }
+      ];
+
+      stats.forEach((stat, index) => {
+        const x = 60 + (index % 2) * (statCardWidth + 24);
+        const y = 232 + Math.floor(index / 2) * 96;
+        drawRoundedRect(ctx, x, y, statCardWidth, 84, 24, 'rgba(255,255,255,0.9)', 'rgba(15,23,42,0.08)');
+        ctx.fillStyle = '#6b7280';
+        ctx.font = '23px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
+        ctx.fillText(stat.label, x + 24, y + 32);
+        ctx.fillStyle = '#111827';
+        ctx.font = '700 40px -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif';
+        ctx.fillText(stat.value, x + 24, y + 68);
+      });
+
+      let y = 440;
+      ctx.fillStyle = '#111827';
+      ctx.font = '700 34px -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif';
+      ctx.fillText('逐題明細', 60, y);
+      y += 28;
+
+      rowLayouts.forEach(({ result, questionLines, answerLines, correctLines, explanationLines, rowHeight }) => {
+        drawRoundedRect(ctx, 60, y, cardWidth, rowHeight, 28, 'rgba(255,255,255,0.92)', 'rgba(15,23,42,0.08)');
+
+        let cursorY = y + 42;
+        ctx.font = '700 30px -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif';
+        cursorY = drawCanvasTextBlock(ctx, questionLines, 96, cursorY, 40, '#111827');
+
+        cursorY += 12;
+        ctx.font = '500 24px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
+        cursorY = drawCanvasTextBlock(ctx, answerLines, 96, cursorY, 32, '#374151');
+        cursorY += 4;
+        cursorY = drawCanvasTextBlock(ctx, correctLines, 96, cursorY, 32, '#374151');
+        cursorY += 4;
+        cursorY = drawCanvasTextBlock(ctx, explanationLines, 96, cursorY, 32, '#6b7280');
+
+        const statusLabel = result.isCorrect ? '答對' : '答錯';
+        const statusFill = result.isCorrect ? 'rgba(52,199,89,0.14)' : 'rgba(255,59,48,0.12)';
+        const statusStroke = result.isCorrect ? 'rgba(52,199,89,0.25)' : 'rgba(255,59,48,0.22)';
+        const statusText = result.isCorrect ? '#1c8d42' : '#c9342c';
+        ctx.font = '700 20px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
+        const statusWidth = ctx.measureText(statusLabel).width + 34;
+        drawRoundedRect(ctx, width - 60 - statusWidth, y + 24, statusWidth, 40, 20, statusFill, statusStroke);
+        ctx.fillStyle = statusText;
+        ctx.fillText(statusLabel, width - 60 - statusWidth + 17, y + 50);
+
+        y += rowHeight + baseRowGap;
+      });
+
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL('image/png');
+      link.download = 'quiz-session-summary.png';
+      link.click();
+    }
+
     function exportProgressAsImage() {
-      const values = Object.values(progress);
-      if (!values.length) {
+      if (!sessionHistory.length && !Object.keys(progress).length) {
         alert('目前還沒有作答紀錄可匯出。');
         return;
       }
 
-      const totalAnswered = values.reduce((sum, item) => sum + (item.answered || 0), 0);
-      const totalCorrect = values.reduce((sum, item) => sum + (item.correct || 0), 0);
+      const totalSessions = sessionHistory.length;
+      const averageAccuracy = totalSessions
+        ? Math.round(sessionHistory.reduce((sum, item) => sum + item.accuracy, 0) / totalSessions)
+        : 0;
       const totalWrongQuestions = getWrongQuestionCount();
-      const accuracy = totalAnswered ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
-
-      const categoryStats = Object.entries(progress).reduce((acc, [questionId, stat]) => {
-        const question = questions.find(item => item.id === questionId);
-        const category = question?.sourceFile === 'data/custom-question-bank.js' || question?.id?.startsWith('mid-')
-          ? '期中考自訂題目'
-          : (question?.category || '已移除題目');
-        if (!acc[category]) {
-          acc[category] = { answered: 0, correct: 0, wrong: 0 };
-        }
-        acc[category].answered += stat.answered || 0;
-        acc[category].correct += stat.correct || 0;
-        acc[category].wrong += (stat.wrong || 0) > 0 ? 1 : 0;
-        return acc;
-      }, {});
-
-      const rows = Object.entries(categoryStats)
-        .map(([category, stat]) => ({
-          category,
-          answered: stat.answered,
-          wrong: stat.wrong,
-          accuracy: stat.answered ? Math.round((stat.correct / stat.answered) * 100) : 0
-        }))
-        .sort((a, b) => b.answered - a.answered);
-
-      const width = 1200;
-      const rowHeight = 72;
-      const height = 420 + rows.length * rowHeight;
+      const width = 960;
+      const height = 460;
       const canvas = document.createElement('canvas');
       canvas.width = width;
       canvas.height = height;
@@ -1242,46 +1430,21 @@
 
       const cards = [
         { label: '題庫總題數', value: `${questions.length}` },
-        { label: '累計作答次數', value: `${totalAnswered}` },
-        { label: '平均正確率', value: `${accuracy}%` },
+        { label: '總作答次數', value: `${totalSessions}` },
+        { label: '平均正確率', value: `${averageAccuracy}%` },
         { label: '錯題數', value: `${totalWrongQuestions}` }
       ];
 
       cards.forEach((card, index) => {
-        const x = 72 + index * 264;
-        drawRoundedRect(ctx, x, 176, 240, 132, 28, 'rgba(255,255,255,0.88)', 'rgba(15,23,42,0.08)');
+        const x = 72 + (index % 2) * 396;
+        const y = 176 + Math.floor(index / 2) * 150;
+        drawRoundedRect(ctx, x, y, 324, 120, 28, 'rgba(255,255,255,0.88)', 'rgba(15,23,42,0.08)');
         ctx.fillStyle = '#6b7280';
         ctx.font = '24px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
-        ctx.fillText(card.label, x + 24, 224);
+        ctx.fillText(card.label, x + 24, y + 42);
         ctx.fillStyle = '#111827';
         ctx.font = '700 44px -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif';
-        ctx.fillText(card.value, x + 24, 278);
-      });
-
-      drawRoundedRect(ctx, 72, 340, width - 144, height - 392, 30, 'rgba(255,255,255,0.86)', 'rgba(15,23,42,0.08)');
-      ctx.fillStyle = '#111827';
-      ctx.font = '700 34px -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif';
-      ctx.fillText('分類紀錄', 104, 392);
-
-      rows.forEach((row, index) => {
-        const y = 452 + index * rowHeight;
-        if (index > 0) {
-          ctx.strokeStyle = 'rgba(15,23,42,0.08)';
-          ctx.beginPath();
-          ctx.moveTo(104, y - 24);
-          ctx.lineTo(width - 104, y - 24);
-          ctx.stroke();
-        }
-
-        ctx.fillStyle = '#111827';
-        ctx.font = '600 26px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
-        ctx.fillText(row.category, 104, y);
-
-        ctx.fillStyle = '#6b7280';
-        ctx.font = '24px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
-        ctx.fillText(`作答 ${row.answered} 次`, 104, y + 34);
-        ctx.fillText(`正確率 ${row.accuracy}%`, 420, y + 34);
-        ctx.fillText(`錯題 ${row.wrong} 次`, 700, y + 34);
+        ctx.fillText(card.value, x + 24, y + 92);
       });
 
       const link = document.createElement('a');
@@ -1334,7 +1497,9 @@
       const ok = confirm('確定要清空所有作答紀錄嗎？這不會刪掉題庫。');
       if (!ok) return;
       progress = {};
+      sessionHistory = [];
       saveProgress();
+      saveSessionHistory();
       updateGlobalStats();
       updateSelectionSummary();
       alert('已清空作答紀錄。');
@@ -1366,7 +1531,7 @@
       updateSelectionSummary();
 
       els.startBtn.addEventListener('click', () => startSession());
-      els.captureBtn.addEventListener('click', exportProgressAsImage);
+      els.captureBtn.addEventListener('click', exportSessionAsImage);
       els.categorySelect.addEventListener('change', updateSelectionSummary);
       els.modeSelect.addEventListener('change', updateSelectionSummary);
       els.quizRestartBtn.addEventListener('click', () => startSession(currentSession.queue.length ? [...currentSession.queue] : null));
