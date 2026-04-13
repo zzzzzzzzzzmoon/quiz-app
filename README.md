@@ -15,6 +15,25 @@
 - `data/weekly-question-bank.js`
 - `data/custom-question-bank.js`
 
+## 專案結構
+
+目前前端已從單一 `index.html` 拆成下列結構：
+
+- `index.html`
+  頁面骨架，只放 HTML 結構與 script/style 載入。
+- `styles/main.css`
+  所有樣式集中在這裡。
+- `scripts/question-bank.js`
+  題庫版本、預設題庫組裝、題庫資料驗證。
+- `scripts/storage.js`
+  `localStorage` 讀寫，包含題庫、逐題進度、考試輪次紀錄。
+- `scripts/exporters.js`
+  匯出首頁統計圖片與交卷長圖。
+- `scripts/app.js`
+  畫面切換、刷題流程、統計更新、事件綁定。
+
+後續若要維護功能，優先改對應模組，不要把邏輯再塞回 `index.html`。
+
 ## 後續新增第 8 週的方法
 
 1. 打開 `data/weekly-question-bank.js`
@@ -33,6 +52,11 @@
 4. push 到 GitHub 後重新整理頁面
 
 這樣自訂題目就不是只存在瀏覽器，而是會跟著專案一起部署出去。
+
+注意：
+
+- `data/custom-question-bank.js` 裡的題目在頁面中會統一歸類成 `期中考自訂題目`
+- 不需要手動再分週次
 
 ## 每一週的格式
 
@@ -61,7 +85,6 @@
 window.CUSTOM_QUESTION_BANK = [
   {
     id: 'custom-001',
-    category: '自訂題庫',
     type: '單選題',
     question: '題目內容',
     options: ['A', 'B', 'C', 'D'],
@@ -70,6 +93,15 @@ window.CUSTOM_QUESTION_BANK = [
   }
 ];
 ```
+
+## 統計邏輯
+
+- `錯題數`
+  以「曾經答錯過的唯一題目數」計算，不會因為同一題錯很多次而重複累加。
+- `總作答次數`
+  以「完成一整輪考試」算 1 次，不是逐題累加。
+- `平均正確率`
+  先算每一輪考試的正確率，再取所有輪次的平均值。
 
 ## 如果更新後還是看到舊題目
 
