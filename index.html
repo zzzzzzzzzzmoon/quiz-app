@@ -415,15 +415,15 @@
 </head>
 <body>
   <div class="container">
-    <h1 class="title">📚 刷題系統 Pro</h1>
-    <p class="subtitle">單檔 HTML 版本，可直接用 VSCode 開啟，也能部署到 GitHub Pages。支援分類、錯題模式、分數統計、作答解析、題庫匯入匯出、localStorage 本地記錄。</p>
+    <h1 class="title">📚 社群媒體分析每週刷題</h1>
+    <p class="subtitle">題庫已改成每週維護模式，預設內容直接整理自 <code>5-測驗</code> 裡的第 3 到第 7 週 PDF。支援依週次刷題、錯題模式、分數統計、作答解析與本地作答紀錄。</p>
 
     <div class="grid">
       <aside class="panel">
         <h2>控制面板</h2>
 
         <div class="row">
-          <label for="categorySelect">題目分類</label>
+          <label for="categorySelect">選擇週次</label>
           <select id="categorySelect"></select>
         </div>
 
@@ -473,19 +473,19 @@
         <hr style="border-color: var(--border); margin: 18px 0;">
 
         <h2>題庫管理</h2>
-        <p class="small">你可以把題目存成 JSON 陣列貼進來。每題格式可參考下方範例。</p>
+        <p class="small">預設題庫來自 <code>5-測驗</code> 的每週 PDF。後續若要新增第 8 週、第 9 週，請直接編輯 <code>data/weekly-question-bank.js</code>。下方 JSON 區塊是進階覆蓋模式。</p>
 
         <div class="row">
           <label for="importArea">匯入題庫 JSON</label>
           <textarea id="importArea" placeholder='[
   {
-    "id": "nlp-001",
-    "category": "NLP",
-    "type": "定義題",
-    "question": "TF-IDF 的主要用途是什麼？",
-    "options": ["衡量字詞重要性", "計算神經網路參數", "建立資料表主鍵", "取代分類模型"],
+    "id": "w8-q01",
+    "category": "第 8 週",
+    "type": "單選題",
+    "question": "這是你之後新增的第 8 週題目",
+    "options": ["選項 A", "選項 B", "選項 C", "選項 D"],
     "answer": 0,
-    "explanation": "TF-IDF 用來衡量某個字在文件中的相對重要性。"
+    "explanation": "題目解析寫在這裡。"
   }
 ]'></textarea>
         </div>
@@ -493,27 +493,27 @@
         <div class="btn-group-3">
           <button id="importBtn" class="btn-primary">匯入題庫</button>
           <button id="exportQuestionsBtn" class="btn-secondary">匯出題庫</button>
-          <button id="resetQuestionsBtn" class="btn-danger">還原預設題庫</button>
+          <button id="resetQuestionsBtn" class="btn-danger">還原每週預設題庫</button>
         </div>
 
-        <p class="footer-note">提示：第一次先直接使用預設題庫確認功能正常。等你熟悉之後，再把自己的課程題目一批一批貼進來。</p>
+        <p class="footer-note">維護建議：平常只改 <code>data/weekly-question-bank.js</code>；真的要整包覆蓋題庫時，再使用這裡的 JSON 匯入。</p>
       </aside>
 
       <main>
         <section id="welcomeCard" class="card">
           <h2>先做這三件事</h2>
           <ol style="line-height: 1.9; padding-left: 20px;">
-            <li>按左側 <strong>開始刷題</strong>，先確認系統能正常運作。</li>
-            <li>做完一輪後，看看 <strong>錯題模式</strong> 和 <strong>統計資料</strong>。</li>
-            <li>最後再把你的課程題目匯入進來，變成你自己的專屬刷題網站。</li>
+            <li>先在左側選擇 <strong>週次</strong>，例如第 3 週或第 4 週。</li>
+            <li>按 <strong>開始刷題</strong>，做完一輪後再用 <strong>只刷錯題</strong> 複習。</li>
+            <li>未來新增新週次時，只要補進 <strong>data/weekly-question-bank.js</strong>。</li>
           </ol>
-          <div class="small">這個版本不需要安裝任何套件。你只要把整份檔案存成 <code>index.html</code>，用瀏覽器打開就能用。</div>
+          <div class="small">這個版本不需要安裝任何套件。只要維護每週題庫資料檔並重新部署，頁面就會自動帶入新版預設題目。</div>
         </section>
 
         <section id="quizCard" class="card hidden">
           <div class="quiz-top">
             <div class="badge" id="quizModeBadge">全部題目</div>
-            <div class="badge" id="quizCategoryBadge">全部分類</div>
+            <div class="badge" id="quizCategoryBadge">全部週次</div>
           </div>
 
           <div class="progress-wrap">
@@ -528,7 +528,7 @@
 
           <div class="question-box">
             <div class="question-meta">
-              <span class="mini-tag" id="metaCategory">分類</span>
+              <span class="mini-tag" id="metaCategory">週次</span>
               <span class="mini-tag" id="metaType">題型</span>
             </div>
             <p class="question-title" id="questionTitle"></p>
@@ -590,84 +590,34 @@
     </div>
   </div>
 
+  <script src="data/weekly-question-bank.js"></script>
   <script>
-    const DEFAULT_QUESTIONS = [
-      {
-        id: 'nlp-001',
-        category: 'NLP',
-        type: '定義題',
-        question: 'TF-IDF 的主要用途是什麼？',
-        options: ['衡量字詞在文件中的相對重要性', '計算神經網路權重', '直接完成文件分類', '將句子自動翻譯'],
-        answer: 0,
-        explanation: 'TF-IDF 會結合詞頻（TF）與逆文件頻率（IDF），用來衡量某個字詞對某篇文件的重要程度。'
-      },
-      {
-        id: 'nlp-002',
-        category: 'NLP',
-        type: '比較題',
-        question: '下列何者最能正確描述 Precision 與 Recall 的差異？',
-        options: ['Precision 重視抓得多，Recall 重視抓得準', 'Precision 重視預測為正的準確性，Recall 重視實際為正的涵蓋率', '兩者完全相同', 'Recall 只能用在回歸問題'],
-        answer: 1,
-        explanation: 'Precision = TP / (TP + FP)，重視你判正的那些有多準；Recall = TP / (TP + FN)，重視真正為正的樣本中抓到了多少。'
-      },
-      {
-        id: 'nlp-003',
-        category: '文件分類',
-        type: '情境題',
-        question: '你想把新聞文章分成股市、運動、全球、兩岸四類，最常見的流程是什麼？',
-        options: ['先做 TF-IDF，再用分類模型訓練', '先做人臉辨識，再做回歸分析', '先用 ARIMA，再做時間序列外推', '只要有停用字表就能直接分類'],
-        answer: 0,
-        explanation: '文本分類常見流程是：文字前處理 → 向量化（如 TF-IDF）→ 分類模型（如 Naive Bayes、Logistic Regression）。'
-      },
-      {
-        id: 'nlp-004',
-        category: '評估指標',
-        type: '計算題',
-        question: '若 TP=8、FP=2，則 Precision 為何？',
-        options: ['0.2', '0.5', '0.8', '0.9'],
-        answer: 2,
-        explanation: 'Precision = TP / (TP + FP) = 8 / (8 + 2) = 0.8。'
-      },
-      {
-        id: 'nlp-005',
-        category: '評估指標',
-        type: '陷阱題',
-        question: '下列哪一個敘述是錯的？',
-        options: ['Accuracy 在資料極度不平衡時可能失真', 'F1-score 同時考量 Precision 與 Recall', 'Recall 越高一定代表 Precision 也越高', '混淆矩陣可幫助理解分類表現'],
-        answer: 2,
-        explanation: 'Recall 高不代表 Precision 也高，兩者可能互相拉扯。'
-      },
-      {
-        id: 'nlp-006',
-        category: 'NLP',
-        type: '基礎題',
-        question: 'Tokenization 最接近下列哪一個意思？',
-        options: ['把文字切成可處理的單位', '把圖片轉成語音', '把程式自動除錯', '把模型準確率提升到 100%'],
-        answer: 0,
-        explanation: 'Tokenization 是把句子拆成字、詞或其他 token，方便後續分析。'
-      },
-      {
-        id: 'nlp-007',
-        category: '文件分類',
-        type: '比較題',
-        question: 'Naive Bayes 適合文本分類的常見原因是什麼？',
-        options: ['因為一定比深度學習準', '因為對高維稀疏文字特徵常有不錯效果且計算快', '因為完全不需要訓練資料', '因為可自動理解所有語意'],
-        answer: 1,
-        explanation: 'Naive Bayes 對高維稀疏特徵很常見，速度也快，是文本分類入門常用模型。'
-      },
-      {
-        id: 'nlp-008',
-        category: '評估指標',
-        type: '情境題',
-        question: '若你的任務是盡量不要漏抓詐騙交易，較應優先關注哪個指標？',
-        options: ['Recall', 'Precision', 'MSE', 'R-squared'],
-        answer: 0,
-        explanation: '不要漏抓代表要盡量降低 FN，因此通常會優先關注 Recall。'
-      }
+    const LEGACY_DEFAULT_QUESTION_IDS = [
+      'nlp-001',
+      'nlp-002',
+      'nlp-003',
+      'nlp-004',
+      'nlp-005',
+      'nlp-006',
+      'nlp-007',
+      'nlp-008'
     ];
+
+    const DEFAULT_QUESTION_SET_VERSION = window.WEEKLY_QUESTION_BANK_VERSION || '2026-04-13';
+    const DEFAULT_QUESTIONS = (window.WEEKLY_QUESTION_BANK || []).flatMap(week =>
+      week.questions.map(item => ({
+        ...item,
+        category: week.label,
+        weekId: week.id,
+        weekNumber: week.number,
+        sourceFile: week.sourceFile
+      }))
+    );
 
     const STORAGE_KEYS = {
       questions: 'quiz_app_questions_v1',
+      questionSource: 'quiz_app_question_source_v1',
+      defaultVersion: 'quiz_app_default_version_v1',
       progress: 'quiz_app_progress_v1'
     };
 
@@ -723,19 +673,81 @@
       backToStartBtn: document.getElementById('backToStartBtn')
     };
 
+    function isValidQuestionSet(data) {
+      return Array.isArray(data) && data.length && data.every(item =>
+        item &&
+        typeof item.id === 'string' &&
+        typeof item.category === 'string' &&
+        typeof item.type === 'string' &&
+        typeof item.question === 'string' &&
+        Array.isArray(item.options) &&
+        typeof item.answer === 'number' &&
+        typeof item.explanation === 'string'
+      );
+    }
+
+    function matchesQuestionIds(data, expectedIds) {
+      return Array.isArray(data) &&
+        data.length === expectedIds.length &&
+        data.every((item, index) => item?.id === expectedIds[index]);
+    }
+
+    function isLegacyBundledQuestionSet(data) {
+      return matchesQuestionIds(data, LEGACY_DEFAULT_QUESTION_IDS) ||
+        matchesQuestionIds(data, DEFAULT_QUESTIONS.map(item => item.id));
+    }
+
+    function persistQuestions(nextQuestions, source = 'custom') {
+      localStorage.setItem(STORAGE_KEYS.questions, JSON.stringify(nextQuestions));
+      localStorage.setItem(STORAGE_KEYS.questionSource, source);
+
+      if (source === 'default') {
+        localStorage.setItem(STORAGE_KEYS.defaultVersion, DEFAULT_QUESTION_SET_VERSION);
+      } else {
+        localStorage.removeItem(STORAGE_KEYS.defaultVersion);
+      }
+    }
+
     function loadQuestions() {
       try {
         const raw = localStorage.getItem(STORAGE_KEYS.questions);
-        if (!raw) return [...DEFAULT_QUESTIONS];
+        const source = localStorage.getItem(STORAGE_KEYS.questionSource);
+        const defaultVersion = localStorage.getItem(STORAGE_KEYS.defaultVersion);
+
+        if (!raw) {
+          persistQuestions(DEFAULT_QUESTIONS, 'default');
+          return [...DEFAULT_QUESTIONS];
+        }
+
         const data = JSON.parse(raw);
-        return Array.isArray(data) && data.length ? data : [...DEFAULT_QUESTIONS];
+        if (!isValidQuestionSet(data)) {
+          persistQuestions(DEFAULT_QUESTIONS, 'default');
+          return [...DEFAULT_QUESTIONS];
+        }
+
+        if (source === 'custom') return data;
+
+        if (source === 'default') {
+          if (defaultVersion === DEFAULT_QUESTION_SET_VERSION) return data;
+          persistQuestions(DEFAULT_QUESTIONS, 'default');
+          return [...DEFAULT_QUESTIONS];
+        }
+
+        if (isLegacyBundledQuestionSet(data)) {
+          persistQuestions(DEFAULT_QUESTIONS, 'default');
+          return [...DEFAULT_QUESTIONS];
+        }
+
+        persistQuestions(data, 'custom');
+        return data;
       } catch {
+        persistQuestions(DEFAULT_QUESTIONS, 'default');
         return [...DEFAULT_QUESTIONS];
       }
     }
 
-    function saveQuestions() {
-      localStorage.setItem(STORAGE_KEYS.questions, JSON.stringify(questions));
+    function saveQuestions(source = 'custom') {
+      persistQuestions(questions, source);
     }
 
     function loadProgress() {
@@ -762,7 +774,7 @@
     }
 
     function getCategories() {
-      return ['全部分類', ...new Set(questions.map(q => q.category))];
+      return ['全部週次', ...new Set(questions.map(q => q.category))];
     }
 
     function getQuestionStats(questionId) {
@@ -800,7 +812,7 @@
 
       let pool = [...questions];
 
-      if (category && category !== '全部分類') {
+      if (category && category !== '全部週次') {
         pool = pool.filter(q => q.category === category);
       }
 
@@ -836,7 +848,7 @@
       els.summaryCard.classList.add('hidden');
       els.quizCard.classList.remove('hidden');
       els.quizModeBadge.textContent = modeLabel(els.modeSelect.value);
-      els.quizCategoryBadge.textContent = els.categorySelect.value || '全部分類';
+      els.quizCategoryBadge.textContent = els.categorySelect.value || '全部週次';
 
       renderCurrentQuestion();
     }
@@ -865,7 +877,7 @@
       els.scoreText.textContent = `目前得分：${currentSession.score}`;
       els.progressFill.style.width = `${((currentSession.index) / currentSession.queue.length) * 100}%`;
 
-      els.metaCategory.textContent = `分類：${q.category}`;
+      els.metaCategory.textContent = `週次：${q.category}`;
       els.metaType.textContent = `題型：${q.type}`;
       els.questionTitle.textContent = q.question;
 
@@ -1016,7 +1028,7 @@
         }
 
         questions = data;
-        saveQuestions();
+        saveQuestions('custom');
         renderCategoryOptions();
         updateGlobalStats();
         resetSessionView();
@@ -1036,14 +1048,14 @@
     }
 
     function resetQuestionsToDefault() {
-      const ok = confirm('確定要還原預設題庫嗎？目前自訂題庫會被覆蓋。');
+      const ok = confirm('確定要還原每週預設題庫嗎？目前自訂題庫會被覆蓋。');
       if (!ok) return;
       questions = [...DEFAULT_QUESTIONS];
-      saveQuestions();
+      saveQuestions('default');
       renderCategoryOptions();
       updateGlobalStats();
       resetSessionView();
-      alert('已還原預設題庫。');
+      alert('已還原每週預設題庫。');
     }
 
     function escapeHtml(text) {
