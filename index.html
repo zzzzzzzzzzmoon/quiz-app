@@ -32,9 +32,9 @@
     }
 
     .container {
-      max-width: 1100px;
+      max-width: 820px;
       margin: 0 auto;
-      padding: 24px;
+      padding: 16px;
     }
 
     .title {
@@ -46,14 +46,26 @@
 
     .subtitle {
       color: var(--muted);
-      margin: 0 0 24px;
+      margin: 0;
       line-height: 1.6;
+    }
+
+    .home-view,
+    .focus-shell {
+      display: grid;
+      gap: 18px;
+    }
+
+    .home-hero {
+      display: grid;
+      gap: 8px;
+      padding-top: 6px;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: 320px 1fr;
-      gap: 20px;
+      grid-template-columns: 1fr;
+      gap: 18px;
     }
 
     .panel, .card {
@@ -66,9 +78,6 @@
 
     .panel {
       padding: 18px;
-      position: sticky;
-      top: 20px;
-      height: fit-content;
     }
 
     .panel h2, .card h2 {
@@ -146,13 +155,13 @@
 
     .btn-group {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: 10px;
     }
 
     .btn-group-3 {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: 1fr;
       gap: 10px;
     }
 
@@ -181,15 +190,6 @@
       font-weight: 800;
     }
 
-    .quiz-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      align-items: center;
-      flex-wrap: wrap;
-      margin-bottom: 18px;
-    }
-
     .badge {
       display: inline-flex;
       align-items: center;
@@ -201,6 +201,75 @@
       border-radius: 999px;
       font-size: 13px;
       font-weight: 700;
+    }
+
+    .focus-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .focus-context {
+      display: grid;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .focus-mode-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .focus-subline {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .menu-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .icon-btn {
+      width: 48px;
+      height: 48px;
+      padding: 0;
+      border-radius: 16px;
+      background: rgba(17, 24, 39, 0.82);
+      color: var(--text);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .menu-panel {
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      width: 180px;
+      display: grid;
+      gap: 8px;
+      padding: 10px;
+      background: rgba(17, 24, 39, 0.96);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      z-index: 20;
+    }
+
+    .menu-item {
+      width: 100%;
+      text-align: left;
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
     }
 
     .progress-wrap {
@@ -325,6 +394,17 @@
       margin-top: 18px;
     }
 
+    .quiz-actions {
+      display: grid;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .quiz-actions button {
+      width: 100%;
+      min-height: 52px;
+    }
+
     .result-banner {
       padding: 16px;
       border-radius: 16px;
@@ -388,37 +468,52 @@
       line-height: 1.7;
     }
 
-    @media (max-width: 900px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-      .panel {
-        position: static;
+    @media (min-width: 720px) {
+      .container { padding: 24px; }
+      .btn-group {
+        grid-template-columns: 1fr 1fr;
       }
       .btn-group-3 {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .quiz-actions {
         grid-template-columns: 1fr;
       }
-      .btn-group {
-        grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 960px) {
+      .container {
+        max-width: 1100px;
       }
-      .stats {
-        grid-template-columns: 1fr 1fr;
+      .grid {
+        grid-template-columns: 320px 1fr;
+      }
+      .panel {
+        position: sticky;
+        top: 20px;
+        height: fit-content;
       }
     }
 
     @media (max-width: 560px) {
-      .container { padding: 16px; }
       .card, .panel { padding: 16px; }
       .stats { grid-template-columns: 1fr; }
+      .progress-info {
+        flex-direction: column;
+        gap: 6px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1 class="title">📚 社群媒體分析每週刷題</h1>
-    <p class="subtitle">題庫已改成每週維護模式，預設內容直接整理自 <code>5-測驗</code> 裡的第 3 到第 7 週 PDF。支援依週次刷題、錯題模式、分數統計、作答解析與本地作答紀錄。</p>
+    <section id="homeView" class="home-view">
+      <div class="home-hero">
+        <h1 class="title">📚 社群媒體分析每週刷題</h1>
+        <p class="subtitle">手機版優先設計。首頁負責設定，開始後進入專注刷題頁。題庫內容整理自 <code>5-測驗</code> 第 3 到第 7 週 PDF，並支援額外自訂題庫。</p>
+      </div>
 
-    <div class="grid">
+      <div class="grid">
       <aside class="panel">
         <h2>控制面板</h2>
 
@@ -509,84 +604,98 @@
           </ol>
           <div class="small">這個版本不需要安裝任何套件。只要維護題庫資料檔並重新部署，頁面就會自動帶入新版預設題目。</div>
         </section>
-
-        <section id="quizCard" class="card hidden">
-          <div class="quiz-top">
-            <div class="badge" id="quizModeBadge">全部題目</div>
-            <div class="badge" id="quizCategoryBadge">全部週次</div>
-          </div>
-
-          <div class="progress-wrap">
-            <div class="progress-info">
-              <span id="progressText">第 1 / 5 題</span>
-              <span id="scoreText">目前得分：0</span>
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill" id="progressFill"></div>
-            </div>
-          </div>
-
-          <div class="question-box">
-            <div class="question-meta">
-              <span class="mini-tag" id="metaCategory">週次</span>
-              <span class="mini-tag" id="metaType">題型</span>
-            </div>
-            <p class="question-title" id="questionTitle"></p>
-          </div>
-
-          <div class="options" id="optionsContainer"></div>
-
-          <div id="resultBanner" class="result-banner hidden"></div>
-          <div id="explanationBox" class="explanation hidden"></div>
-
-          <div class="toolbar">
-            <button id="nextBtn" class="btn-primary" disabled>下一題</button>
-            <button id="restartBtn" class="btn-secondary">重新開始</button>
-          </div>
-        </section>
-
-        <section id="summaryCard" class="card hidden">
-          <h2>本輪結果</h2>
-          <div class="stats">
-            <div class="stat">
-              <div class="k">本輪題數</div>
-              <div class="v" id="summaryTotal">0</div>
-            </div>
-            <div class="stat">
-              <div class="k">答對題數</div>
-              <div class="v" id="summaryCorrect">0</div>
-            </div>
-            <div class="stat">
-              <div class="k">正確率</div>
-              <div class="v" id="summaryAccuracy">0%</div>
-            </div>
-            <div class="stat">
-              <div class="k">錯題數</div>
-              <div class="v" id="summaryWrong">0</div>
-            </div>
-          </div>
-
-          <div class="toolbar">
-            <button id="retryWrongBtn" class="btn-success">只重刷本輪錯題</button>
-            <button id="backToStartBtn" class="btn-secondary">返回設定</button>
-          </div>
-
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>題目</th>
-                  <th>你的答案</th>
-                  <th>正確答案</th>
-                  <th>結果</th>
-                </tr>
-              </thead>
-              <tbody id="summaryTableBody"></tbody>
-            </table>
-          </div>
-        </section>
       </main>
+      </div>
+    </section>
+
+    <section id="quizShell" class="focus-shell hidden">
+      <div class="focus-header">
+        <div class="focus-context">
+          <div class="badge" id="quizCategoryBadge">全部週次</div>
+          <div class="focus-mode-row">
+            <div class="badge" id="quizModeBadge">全部題目</div>
+            <div class="focus-subline" id="headerProgressText">第 1 / 5 題</div>
+          </div>
+        </div>
+        <div class="menu-wrap">
+          <button id="menuToggleBtn" class="icon-btn" aria-label="開啟選單">☰</button>
+          <div id="menuPanel" class="menu-panel hidden">
+            <button id="menuRestartBtn" class="menu-item">重新開始本輪</button>
+            <button id="menuHomeBtn" class="menu-item">返回首頁</button>
+          </div>
+        </div>
+      </div>
+
+      <section id="quizCard" class="card hidden">
+        <div class="progress-wrap">
+          <div class="progress-info">
+            <span id="progressText">第 1 / 5 題</span>
+            <span id="scoreText">目前得分：0</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+        </div>
+
+        <div class="question-box">
+          <div class="question-meta">
+            <span class="mini-tag" id="metaCategory">週次</span>
+            <span class="mini-tag" id="metaType">題型</span>
+          </div>
+          <p class="question-title" id="questionTitle"></p>
+        </div>
+
+        <div class="options" id="optionsContainer"></div>
+
+        <div id="resultBanner" class="result-banner hidden"></div>
+        <div id="explanationBox" class="explanation hidden"></div>
+
+        <div class="quiz-actions">
+          <button id="nextBtn" class="btn-primary" disabled>下一題</button>
+        </div>
+      </section>
+
+      <section id="summaryCard" class="card hidden">
+        <h2>本輪結果</h2>
+        <div class="stats">
+          <div class="stat">
+            <div class="k">本輪題數</div>
+            <div class="v" id="summaryTotal">0</div>
+          </div>
+          <div class="stat">
+            <div class="k">答對題數</div>
+            <div class="v" id="summaryCorrect">0</div>
+          </div>
+          <div class="stat">
+            <div class="k">正確率</div>
+            <div class="v" id="summaryAccuracy">0%</div>
+          </div>
+          <div class="stat">
+            <div class="k">錯題數</div>
+            <div class="v" id="summaryWrong">0</div>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <button id="retryWrongBtn" class="btn-success">只重刷本輪錯題</button>
+          <button id="backToStartBtn" class="btn-secondary">返回設定</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>題目</th>
+                <th>你的答案</th>
+                <th>正確答案</th>
+                <th>結果</th>
+              </tr>
+            </thead>
+            <tbody id="summaryTableBody"></tbody>
+          </table>
+        </div>
+      </section>
     </div>
   </div>
 
@@ -644,6 +753,8 @@
     };
 
     const els = {
+      homeView: document.getElementById('homeView'),
+      quizShell: document.getElementById('quizShell'),
       categorySelect: document.getElementById('categorySelect'),
       modeSelect: document.getElementById('modeSelect'),
       questionCountInput: document.getElementById('questionCountInput'),
@@ -660,10 +771,15 @@
       statAnswered: document.getElementById('statAnswered'),
       statAccuracy: document.getElementById('statAccuracy'),
       welcomeCard: document.getElementById('welcomeCard'),
+      headerProgressText: document.getElementById('headerProgressText'),
       quizCard: document.getElementById('quizCard'),
       summaryCard: document.getElementById('summaryCard'),
       quizModeBadge: document.getElementById('quizModeBadge'),
       quizCategoryBadge: document.getElementById('quizCategoryBadge'),
+      menuToggleBtn: document.getElementById('menuToggleBtn'),
+      menuPanel: document.getElementById('menuPanel'),
+      menuRestartBtn: document.getElementById('menuRestartBtn'),
+      menuHomeBtn: document.getElementById('menuHomeBtn'),
       progressText: document.getElementById('progressText'),
       scoreText: document.getElementById('scoreText'),
       progressFill: document.getElementById('progressFill'),
@@ -674,7 +790,6 @@
       resultBanner: document.getElementById('resultBanner'),
       explanationBox: document.getElementById('explanationBox'),
       nextBtn: document.getElementById('nextBtn'),
-      restartBtn: document.getElementById('restartBtn'),
       summaryTotal: document.getElementById('summaryTotal'),
       summaryCorrect: document.getElementById('summaryCorrect'),
       summaryAccuracy: document.getElementById('summaryAccuracy'),
@@ -805,6 +920,33 @@
       els.statAccuracy.textContent = accuracy + '%';
     }
 
+    function closeMenu() {
+      els.menuPanel.classList.add('hidden');
+      els.menuToggleBtn.setAttribute('aria-expanded', 'false');
+    }
+
+    function toggleMenu() {
+      const isHidden = els.menuPanel.classList.contains('hidden');
+      els.menuPanel.classList.toggle('hidden', !isHidden);
+      els.menuToggleBtn.setAttribute('aria-expanded', String(isHidden));
+    }
+
+    function showHomeView() {
+      closeMenu();
+      els.homeView.classList.remove('hidden');
+      els.quizShell.classList.add('hidden');
+      els.quizCard.classList.add('hidden');
+      els.summaryCard.classList.add('hidden');
+    }
+
+    function showFocusView(view = 'quiz') {
+      closeMenu();
+      els.homeView.classList.add('hidden');
+      els.quizShell.classList.remove('hidden');
+      els.quizCard.classList.toggle('hidden', view !== 'quiz');
+      els.summaryCard.classList.toggle('hidden', view !== 'summary');
+    }
+
     function renderCategoryOptions() {
       const categories = getCategories();
       const current = els.categorySelect.value;
@@ -855,9 +997,7 @@
         results: []
       };
 
-      els.welcomeCard.classList.add('hidden');
-      els.summaryCard.classList.add('hidden');
-      els.quizCard.classList.remove('hidden');
+      showFocusView('quiz');
       els.quizModeBadge.textContent = modeLabel(els.modeSelect.value);
       els.quizCategoryBadge.textContent = els.categorySelect.value || '全部週次';
 
@@ -885,6 +1025,7 @@
       els.explanationBox.innerHTML = '';
 
       els.progressText.textContent = `第 ${currentSession.index + 1} / ${currentSession.queue.length} 題`;
+      els.headerProgressText.textContent = els.progressText.textContent;
       els.scoreText.textContent = `目前得分：${currentSession.score}`;
       els.progressFill.style.width = `${((currentSession.index) / currentSession.queue.length) * 100}%`;
 
@@ -936,6 +1077,7 @@
       els.explanationBox.innerHTML = `<strong>解析：</strong>${escapeHtml(q.explanation)}<br><br><strong>正確答案：</strong>${String.fromCharCode(65 + q.answer)}. ${escapeHtml(q.options[q.answer])}`;
       els.nextBtn.disabled = false;
       els.scoreText.textContent = `目前得分：${currentSession.score}`;
+      els.progressFill.style.width = `${((currentSession.index + 1) / currentSession.queue.length) * 100}%`;
 
       currentSession.results.push({
         questionId: q.id,
@@ -958,8 +1100,7 @@
     }
 
     function finishSession() {
-      els.quizCard.classList.add('hidden');
-      els.summaryCard.classList.remove('hidden');
+      showFocusView('summary');
       els.progressFill.style.width = '100%';
 
       const total = currentSession.queue.length;
@@ -971,6 +1112,7 @@
       els.summaryCorrect.textContent = correct;
       els.summaryWrong.textContent = wrong;
       els.summaryAccuracy.textContent = accuracy + '%';
+      els.headerProgressText.textContent = `完成 ${correct} / ${total} 題`;
 
       els.summaryTableBody.innerHTML = currentSession.results.map((r, idx) => {
         return `
@@ -994,9 +1136,7 @@
 
     function resetSessionView() {
       currentSession = { queue: [], index: 0, score: 0, answered: false, results: [] };
-      els.quizCard.classList.add('hidden');
-      els.summaryCard.classList.add('hidden');
-      els.welcomeCard.classList.remove('hidden');
+      showHomeView();
     }
 
     function exportJSON(filename, data) {
@@ -1084,8 +1224,10 @@
 
       els.startBtn.addEventListener('click', () => startSession());
       els.resetSessionBtn.addEventListener('click', resetSessionView);
+      els.menuToggleBtn.addEventListener('click', toggleMenu);
+      els.menuRestartBtn.addEventListener('click', () => startSession(currentSession.queue.length ? [...currentSession.queue] : null));
+      els.menuHomeBtn.addEventListener('click', resetSessionView);
       els.nextBtn.addEventListener('click', nextQuestion);
-      els.restartBtn.addEventListener('click', () => startSession());
       els.backToStartBtn.addEventListener('click', resetSessionView);
 
       els.retryWrongBtn.addEventListener('click', () => {
@@ -1103,6 +1245,11 @@
       els.exportProgressBtn.addEventListener('click', () => exportJSON('progress.json', progress));
       els.clearProgressBtn.addEventListener('click', clearAllProgress);
       els.resetQuestionsBtn.addEventListener('click', resetQuestionsToDefault);
+      document.addEventListener('click', (event) => {
+        if (!els.menuPanel.contains(event.target) && !els.menuToggleBtn.contains(event.target)) {
+          closeMenu();
+        }
+      });
     }
 
     init();
