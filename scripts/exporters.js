@@ -78,14 +78,58 @@ function drawCanvasTextBlock(ctx, lines, x, y, lineHeight, color) {
   return y + lines.length * lineHeight;
 }
 
-function downloadCanvas(canvas, filename) {
-  const link = document.createElement('a');
-  link.href = canvas.toDataURL('image/png');
-  link.download = filename;
-  link.click();
+function canvasToBlob(canvas) {
+  return new Promise(resolve => {
+    canvas.toBlob(resolve, 'image/png');
+  });
 }
 
-export function exportSessionAsImage({ currentSession, quizCategoryLabel, quizModeLabel }) {
+async function downloadCanvas(canvas, filename) {
+  const blob = await canvasToBlob(canvas);
+  if (!blob) {
+    throw new Error('圖片產生失敗');
+  }
+
+  const file = typeof File === 'function'
+    ? new File([blob], filename, { type: 'image/png' })
+    : null;
+
+  if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+    try {
+      await navigator.share({
+        files: [file],
+        title: filename
+      });
+      return;
+    } catch (error) {
+      if (error?.name === 'AbortError') {
+        return;
+      }
+    }
+  }
+
+  const url = URL.createObjectURL(blob);
+
+  try {
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.target = '_blank';
+    link.rel = 'noopener';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    // Mobile browsers may ignore `download`; opening the blob still lets users save the image manually.
+    if (!('download' in HTMLAnchorElement.prototype)) {
+      window.open(url, '_blank', 'noopener');
+    }
+  } finally {
+    window.setTimeout(() => URL.revokeObjectURL(url), 1500);
+  }
+}
+
+export async function exportSessionAsImage({ currentSession, quizCategoryLabel, quizModeLabel }) {
   if (!currentSession.results.length) {
     alert('請先完成一輪作答，再匯出本輪截圖。');
     return;
@@ -197,10 +241,14 @@ export function exportSessionAsImage({ currentSession, quizCategoryLabel, quizMo
     y += rowHeight + baseRowGap;
   });
 
-  downloadCanvas(canvas, 'quiz-session-summary.png');
+  try {
+    await downloadCanvas(canvas, 'quiz-session-summary.png');
+  } catch (error) {
+    alert(`匯出失敗：${error.message}`);
+  }
 }
 
-export function exportProgressAsImage({ questions, progress, sessionHistory, getWrongQuestionCount }) {
+export async function exportProgressAsImage({ questions, progress, sessionHistory, getWrongQuestionCount }) {
   if (!sessionHistory.length && !Object.keys(progress).length) {
     alert('目前還沒有作答紀錄可匯出。');
     return;
@@ -248,5 +296,9 @@ export function exportProgressAsImage({ questions, progress, sessionHistory, get
     ctx.fillText(card.value, x + 24, y + 92);
   });
 
-  downloadCanvas(canvas, 'quiz-progress-summary.png');
+  try {
+    await downloadCanvas(canvas, 'quiz-progress-summary.png');
+  } catch (error) {
+    alert(`匯出失敗：${error.message}`);
+  }
 }
