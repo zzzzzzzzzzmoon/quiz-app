@@ -90,42 +90,27 @@ async function downloadCanvas(canvas, filename) {
     throw new Error('圖片產生失敗');
   }
 
-  const file = typeof File === 'function'
-    ? new File([blob], filename, { type: 'image/png' })
-    : null;
-
-  if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
-    try {
-      await navigator.share({
-        files: [file],
-        title: filename
-      });
-      return;
-    } catch (error) {
-      if (error?.name === 'AbortError') {
-        return;
-      }
-    }
-  }
-
   const url = URL.createObjectURL(blob);
+  const isMobile = window.matchMedia('(max-width: 768px)').matches || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
   try {
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    link.target = '_blank';
-    link.rel = 'noopener';
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-
-    // Mobile browsers may ignore `download`; opening the blob still lets users save the image manually.
-    if (!('download' in HTMLAnchorElement.prototype)) {
-      window.open(url, '_blank', 'noopener');
+    if (isMobile) {
+      const tab = window.open(url, '_blank', 'noopener');
+      if (!tab) {
+        window.location.href = url;
+      }
+    } else {
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
     }
   } finally {
-    window.setTimeout(() => URL.revokeObjectURL(url), 1500);
+    window.setTimeout(() => URL.revokeObjectURL(url), 60000);
   }
 }
 
