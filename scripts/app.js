@@ -9,6 +9,8 @@ import {
 } from './storage.js';
 import { exportProgressAsImage, exportSessionAsImage } from './exporters.js';
 
+const APP_VERSION = window.APP_VERSION || 'v--';
+
 let questions = loadQuestions();
 let progress = loadProgress();
 let sessionHistory = loadSessionHistory();
@@ -64,17 +66,6 @@ const els = {
   captureBtn: document.getElementById('captureBtn')
 };
 
-const VERSION_ASSETS = [
-  window.location.pathname || './index.html',
-  './styles/main.css',
-  './scripts/app.js',
-  './scripts/exporters.js',
-  './scripts/question-bank.js',
-  './scripts/storage.js',
-  './data/weekly-question-bank.js',
-  './data/custom-question-bank.js'
-];
-
 function escapeHtml(text) {
   return String(text)
     .replace(/&/g, '&amp;')
@@ -92,49 +83,6 @@ function exportJSON(filename, data) {
   link.download = filename;
   link.click();
   URL.revokeObjectURL(url);
-}
-
-function formatVersion(date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  return `v${year}.${month}.${day}-${hours}${minutes}`;
-}
-
-async function fetchLastModified(url) {
-  try {
-    const response = await fetch(url, {
-      method: 'HEAD',
-      cache: 'no-store'
-    });
-    if (!response.ok) return null;
-    const lastModified = response.headers.get('last-modified');
-    if (!lastModified) return null;
-
-    const timestamp = Date.parse(lastModified);
-    return Number.isNaN(timestamp) ? null : timestamp;
-  } catch (error) {
-    return null;
-  }
-}
-
-async function resolveAppVersion() {
-  const timestamps = await Promise.all(
-    VERSION_ASSETS.map(path => fetchLastModified(path))
-  );
-
-  const latestTimestamp = Math.max(
-    ...timestamps.filter(timestamp => typeof timestamp === 'number'),
-    Date.parse(document.lastModified || '')
-  );
-
-  if (!Number.isFinite(latestTimestamp)) {
-    return 'v--';
-  }
-
-  return formatVersion(new Date(latestTimestamp));
 }
 
 function getQuestionStats(questionId) {
@@ -485,8 +433,8 @@ function resetQuestionsToDefault() {
   alert('已還原每週預設題庫。');
 }
 
-async function init() {
-  els.appVersionBadge.textContent = await resolveAppVersion();
+function init() {
+  els.appVersionBadge.textContent = APP_VERSION;
   renderCategoryOptions();
   updateGlobalStats();
   updateSelectionSummary();
