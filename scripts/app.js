@@ -9,6 +9,8 @@ import {
 } from './storage.js';
 import { exportProgressAsImage, exportSessionAsImage } from './exporters.js';
 
+const APP_VERSION = 'v2026.04.14';
+
 let questions = loadQuestions();
 let progress = loadProgress();
 let sessionHistory = loadSessionHistory();
@@ -23,6 +25,7 @@ let currentSession = {
 
 const els = {
   homeView: document.getElementById('homeView'),
+  appVersionBadge: document.getElementById('appVersionBadge'),
   quizShell: document.getElementById('quizShell'),
   categorySelect: document.getElementById('categorySelect'),
   modeSelect: document.getElementById('modeSelect'),
@@ -410,6 +413,7 @@ function resetQuestionsToDefault() {
 }
 
 function init() {
+  els.appVersionBadge.textContent = APP_VERSION;
   renderCategoryOptions();
   updateGlobalStats();
   updateSelectionSummary();
