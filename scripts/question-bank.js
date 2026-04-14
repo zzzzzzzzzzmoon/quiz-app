@@ -23,9 +23,28 @@ export const WEEKLY_QUESTIONS = (window.WEEKLY_QUESTION_BANK || []).flatMap(week
   }))
 );
 
+function resolveCustomCategory(item) {
+  if (typeof item?.category === 'string' && /^期中考自訂題目-\d+$/.test(item.category)) {
+    return item.category;
+  }
+  if (typeof item?.id === 'string' && item.id.startsWith('mid3-')) {
+    return '期中考自訂題目-3';
+  }
+  if (typeof item?.id === 'string' && item.id.startsWith('mid2-')) {
+    return '期中考自訂題目-2';
+  }
+  if (typeof item?.id === 'string' && item.id.startsWith('mid1-')) {
+    return '期中考自訂題目-1';
+  }
+  if (typeof item?.id === 'string' && item.id.startsWith('mid-')) {
+    return '期中考自訂題目';
+  }
+  return item?.category || '自訂題庫';
+}
+
 export const CUSTOM_QUESTIONS = (window.CUSTOM_QUESTION_BANK || []).map(item => ({
   ...item,
-  category: '期中考自訂題目',
+  category: resolveCustomCategory(item),
   sourceFile: item.sourceFile || 'data/custom-question-bank.js'
 }));
 
@@ -60,6 +79,18 @@ export function normalizeQuestionCategories(data) {
 
   return data.map(item => {
     if (!item || typeof item !== 'object') return item;
+    if (typeof item.category === 'string' && /^期中考自訂題目-\d+$/.test(item.category)) {
+      return item;
+    }
+    if (typeof item.id === 'string' && item.id.startsWith('mid3-')) {
+      return { ...item, category: '期中考自訂題目-3' };
+    }
+    if (typeof item.id === 'string' && item.id.startsWith('mid2-')) {
+      return { ...item, category: '期中考自訂題目-2' };
+    }
+    if (typeof item.id === 'string' && item.id.startsWith('mid1-')) {
+      return { ...item, category: '期中考自訂題目-1' };
+    }
     if (typeof item.id === 'string' && item.id.startsWith('mid-')) {
       return { ...item, category: '期中考自訂題目' };
     }
