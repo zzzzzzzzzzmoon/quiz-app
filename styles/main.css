@@ -84,6 +84,15 @@ body {
   padding: 12px;
 }
 
+.action-card {
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(20px);
+  padding: 10px;
+}
+
 .panel h2,
 .card h2 {
   margin: 0 0 10px;
@@ -376,7 +385,6 @@ button:disabled {
 }
 
 .explanation {
-  margin-top: 12px;
   border: 1px solid var(--border);
   border-radius: 16px;
   background: rgba(245, 247, 251, 0.88);
@@ -402,7 +410,6 @@ button:disabled {
 .quiz-actions {
   display: grid;
   gap: 8px;
-  margin-top: 12px;
 }
 
 .quiz-actions button {
@@ -577,16 +584,13 @@ th {
   }
 
   .focus-shell {
-    padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(108px + env(safe-area-inset-bottom, 0px));
   }
 
   .card,
-  .panel {
+  .panel,
+  .action-card {
     padding: 11px;
-  }
-
-  #quizCard {
-    padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
   }
 
   .stats {
@@ -612,19 +616,12 @@ th {
     max-width: 108px;
   }
 
-  .quiz-actions {
+  #quizActionCard {
     position: fixed;
     left: 8px;
     right: 8px;
     bottom: calc(8px + env(safe-area-inset-bottom, 0px));
     z-index: 30;
-    margin-top: 0;
-    padding: 10px;
-    border: 1px solid rgba(15, 23, 42, 0.08);
-    border-radius: 22px;
-    background: rgba(255, 255, 255, 0.86);
-    box-shadow: 0 18px 38px rgba(15, 23, 42, 0.14);
-    backdrop-filter: blur(20px);
   }
 
   .quiz-actions button {

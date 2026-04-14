@@ -43,6 +43,8 @@ const els = {
   statAccuracy: document.getElementById('statAccuracy'),
   quizProgressWrap: document.getElementById('quizProgressWrap'),
   quizCard: document.getElementById('quizCard'),
+  feedbackCard: document.getElementById('feedbackCard'),
+  quizActionCard: document.getElementById('quizActionCard'),
   summaryCard: document.getElementById('summaryCard'),
   quizModeBadge: document.getElementById('quizModeBadge'),
   quizCategoryBadge: document.getElementById('quizCategoryBadge'),
@@ -142,6 +144,8 @@ function showHomeView() {
   els.quizShell.classList.add('hidden');
   els.quizProgressWrap.classList.add('hidden');
   els.quizCard.classList.add('hidden');
+  els.feedbackCard.classList.add('hidden');
+  els.quizActionCard.classList.add('hidden');
   els.summaryCard.classList.add('hidden');
 }
 
@@ -150,6 +154,8 @@ function showFocusView(view = 'quiz') {
   els.quizShell.classList.remove('hidden');
   els.quizProgressWrap.classList.toggle('hidden', view !== 'quiz');
   els.quizCard.classList.toggle('hidden', view !== 'quiz');
+  els.quizActionCard.classList.toggle('hidden', view !== 'quiz');
+  els.feedbackCard.classList.add('hidden');
   els.summaryCard.classList.toggle('hidden', view !== 'summary');
 }
 
@@ -197,6 +203,7 @@ function renderCurrentQuestion() {
   currentSession.answered = false;
   els.nextBtn.disabled = true;
   els.nextBtn.textContent = currentSession.index === currentSession.queue.length - 1 ? '交卷' : '下一題';
+  els.feedbackCard.classList.add('hidden');
   els.resultBanner.className = 'result-banner hidden';
   els.resultBanner.textContent = '';
   els.explanationBox.className = 'explanation hidden';
@@ -269,6 +276,7 @@ function answerQuestion(selectedIndex) {
   els.resultBanner.textContent = isCorrect ? '✅ 答對了！' : '❌ 答錯了';
   els.explanationBox.className = 'explanation';
   els.explanationBox.innerHTML = `<strong>解析：</strong>${escapeHtml(question.explanation)}<br><br><strong>正確答案：</strong>${String.fromCharCode(65 + question.answer)}. ${escapeHtml(question.options[question.answer])}`;
+  els.feedbackCard.classList.remove('hidden');
   els.nextBtn.disabled = false;
   els.scoreText.textContent = `目前得分：${currentSession.score}`;
   els.progressFill.style.width = `${((currentSession.index + 1) / currentSession.queue.length) * 100}%`;

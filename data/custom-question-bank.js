@@ -6,7 +6,7 @@
 //    id, category, type, question, options, answer, explanation
 // 4. category 可以寫成「自訂題庫」或「期中考」這類你想顯示在下拉選單裡的名稱。
 
-window.CUSTOM_QUESTION_BANK_VERSION = '2026-04-13-midterm-50';
+window.CUSTOM_QUESTION_BANK_VERSION = '2026-04-14-midterm-61';
 
 window.CUSTOM_QUESTION_BANK = [
   {
@@ -462,5 +462,104 @@ window.CUSTOM_QUESTION_BANK = [
     options: ['通緝犯辨識', '罪犯保釋判斷', '申請者過濾（ATS）', '以上皆是'],
     answer: 3,
     explanation: '課堂舉出的爭議 AI 應用包含通緝犯辨識、保釋判斷、ATS，以及行銷／選舉操作等。'
+  },
+  {
+    id: 'mid-051',
+    category: '資料整理',
+    type: 'Tidy Data',
+    question: '以下哪一項最符合 tidy data 的基本原則？',
+    options: ['一列放多筆觀測值以節省空間', '一欄可以同時放時間與數值', '一列一筆觀測、一欄一個變數', '先把所有文字合併成一欄再分析'],
+    answer: 2,
+    explanation: 'Tidy data 的核心是把資料整理成一列一筆觀測、一欄一個變數，方便後續分析與轉換。'
+  },
+  {
+    id: 'mid-052',
+    category: '資料整理',
+    type: '資料表結構',
+    question: '在 tidy data 的概念中，以下哪一項最接近 dimension variable？',
+    options: ['情緒分數', '貼文按讚數', '發文時間', 'TF-IDF 權重'],
+    answer: 2,
+    explanation: 'Dimension variable 用來描述資料背景或脈絡，例如時間、國家、作者；情緒分數與按讚數較接近 measure variable。'
+  },
+  {
+    id: 'mid-053',
+    category: '基本文字處理',
+    type: '正規化',
+    question: '以下哪一項最接近文字前處理中的 normalization？',
+    options: ['把文本直接分類成主題', '把不同寫法整理成一致格式', '把每個字都轉成詞性標記', '把所有文件轉成 TF-IDF 向量'],
+    answer: 1,
+    explanation: 'Normalization 是把大小寫、符號、格式等不同寫法整理成一致形式，屬於前處理的一部分。'
+  },
+  {
+    id: 'mid-054',
+    category: '詞性與NER',
+    type: '觀念題',
+    question: '以下哪一項最能說明 POS 與 NER 的差異？',
+    options: ['POS 找人名，NER 找動詞', 'POS 標記詞在句中的語法角色，NER 找具名實體類別', 'POS 只能用在中文，NER 只能用在英文', '兩者都只是在做斷詞'],
+    answer: 1,
+    explanation: 'POS 關心名詞、動詞、形容詞等語法角色；NER 則辨識人名、日期、國家、組織等具名實體。'
+  },
+  {
+    id: 'mid-055',
+    category: '文件表示',
+    type: '特徵矩陣',
+    question: '若把很多篇文件整理成 document-feature matrix，通常列與欄分別代表什麼？',
+    options: ['列是特徵、欄是模型', '列是文件、欄是特徵', '列是情緒、欄是句子', '列是作者、欄是類別'],
+    answer: 1,
+    explanation: 'Document-feature matrix 會把每篇文件排成列、把各個特徵排成欄，方便模型直接讀取。'
+  },
+  {
+    id: 'mid-056',
+    category: '文件表示',
+    type: '探索分析',
+    question: '若想衡量兩個詞是否常一起出現在同一批文件中，以下哪個指標最貼近課堂提到的方法？',
+    options: ['Phi coefficient', 'AUC', 'Sigmoid', 'Specificity'],
+    answer: 0,
+    explanation: '課堂把字詞相關視為二元出現模式的相關問題，常以 phi coefficient 衡量兩詞是否常一起出現。'
+  },
+  {
+    id: 'mid-057',
+    category: '情緒分析',
+    type: '面向情緒',
+    question: '哪一種情緒分析最適合回答「大家對這支手機的電池續航力是否滿意」？',
+    options: ['Document-level sentiment', 'Sentence segmentation', 'Aspect-level sentiment', 'Named Entity Recognition'],
+    answer: 2,
+    explanation: '題目聚焦在特定產品面向「電池續航力」，因此最適合用 aspect-level sentiment。'
+  },
+  {
+    id: 'mid-058',
+    category: '情緒分析',
+    type: '情緒元素',
+    question: '在情緒分析裡，Opinion Holder 指的是什麼？',
+    options: ['被評論的產品規格', '表達意見的人或主體', '情緒字的強度分數', '負責標註 NER 的工具'],
+    answer: 1,
+    explanation: 'Opinion Holder 指的是誰在表達這個意見，例如評論者、作者或發言者。'
+  },
+  {
+    id: 'mid-059',
+    category: '文件分類',
+    type: '模型觀念',
+    question: 'Logistic Regression 中 sigmoid function 的主要作用是什麼？',
+    options: ['把文字切成 token', '把線性分數壓到 0 到 1 之間', '計算 TF-IDF 的 IDF 值', '找出最近的 K 個鄰居'],
+    answer: 1,
+    explanation: 'Logistic Regression 會先得到線性分數，再用 sigmoid 將其轉成 0 到 1 之間的機率值。'
+  },
+  {
+    id: 'mid-060',
+    category: '文件分類',
+    type: '混淆矩陣',
+    question: '若模型把負類樣本誤判成正類，這在混淆矩陣中屬於哪一種情況？',
+    options: ['True Positive', 'True Negative', 'False Positive', 'False Negative'],
+    answer: 2,
+    explanation: '實際是負類、卻被模型判成正類，屬於 False Positive。'
+  },
+  {
+    id: 'mid-061',
+    category: '文件分類',
+    type: '多類別評估',
+    question: '以下關於 Macro-F1 的敘述，何者正確？',
+    options: ['先把所有類別的 TP、FP、FN 加總後再算', '依各類別樣本數加權平均', '先算每個類別的 F1，再直接平均', '只適用於二元分類'],
+    answer: 2,
+    explanation: 'Macro-F1 會先分別計算每個類別的 F1，再直接平均，因此較強調各類別一視同仁。'
   }
 ];
