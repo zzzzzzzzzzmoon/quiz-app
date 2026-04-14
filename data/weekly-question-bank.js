@@ -1,4 +1,4 @@
-window.WEEKLY_QUESTION_BANK_VERSION = '2026-04-13';
+window.WEEKLY_QUESTION_BANK_VERSION = '2026-04-14-fix-w5-q02';
 
 // 維護方式：
 // 1. 每新增一週，就照下面格式新增一個 week 物件。
@@ -168,7 +168,7 @@ window.WEEKLY_QUESTION_BANK = [
         type: '單選題',
         question: '考慮句子「US officials will visit China next week for trade talks to resolve the remaining sticking points in talks to end the trade war with communist China.」，下述有關 NER 的敘述何者有誤？',
         options: ['有三個 COUNTRY', '有一個 DATE', '有一個 IDEOLOGY', '有一個 CAUSE_OF_DEATH'],
-        answer: 2,
+        answer: 3,
         explanation: '句中可辨識 3 個 COUNTRY、1 個 DATE、1 個 IDEOLOGY，沒有 CAUSE_OF_DEATH。'
       },
       {
