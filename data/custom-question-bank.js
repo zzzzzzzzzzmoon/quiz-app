@@ -1,565 +1,559 @@
-
 // 使用方式：
-// 1. 把 GPT 產生的題目貼到下面陣列裡。
-// 2. 每次修改後，請同步更新上面的版本字串。
+// 1. 這份題庫提供期中考用的整合練習題。
+// 2. 若後續新增或改題，請同步更新版本字串。
 // 3. 題目格式請維持：
 //    id, category, type, question, options, answer, explanation
-// 4. category 可以寫成「自訂題庫」或「期中考」這類你想顯示在下拉選單裡的名稱。
 
-window.CUSTOM_QUESTION_BANK_VERSION = '2026-04-14-midterm-61';
+window.CUSTOM_QUESTION_BANK_VERSION = '2026-04-14-midterm-rebuild-61';
 
 window.CUSTOM_QUESTION_BANK = [
   {
     id: 'mid-001',
-    category: '基本文字處理',
-    type: '觀念題',
-    question: '抓取討論版資料時，以下哪一項最完整地涵蓋應注意的事項？',
-    options: ['確定合適的討論版', '訂定適當的關鍵字', '設定白名單與黑名單', '以上皆是'],
-    answer: 3,
-    explanation: '抓取資料時，資料來源、關鍵字、白名單與黑名單都要一起考量，才能提高資料相關性。'
+    category: '資料來源與整理',
+    type: '工具比較',
+    question: '若同一平台同時提供 API 與公開網頁，為了長期穩定蒐集文字資料，通常優先考慮哪一種方式？',
+    options: ['API', '直接截圖存圖檔', '只靠人工複製貼上', '先做 TF-IDF 再決定'],
+    answer: 0,
+    explanation: '平台提供的 API 通常比直接解析網頁 HTML 更穩定，也較容易維護與重複取得資料。'
   },
   {
     id: 'mid-002',
-    category: '基本文字處理',
-    type: '判斷題',
-    question: '以下哪一項不是抓取與初步清理文字資料時要做的工作？',
-    options: ['標詞性', '去除格式化符號', '去除特殊符號', '全形轉半形'],
+    category: '資料來源與整理',
+    type: '資料篩選',
+    question: '研究「手機電池災情」時，若關鍵字「電池」同時抓到汽車電池與行動電源文章，最適合先加入哪一種規則減少噪音？',
+    options: ['黑名單', '詞性標記', 'Lemmatization', 'Macro-F1'],
     answer: 0,
-    explanation: '標詞性通常是在斷詞之後、分析重要字詞時才進行，不屬於最前面的抓取與初步清理工作。'
+    explanation: '黑名單用來排除雖然字面相似、但與研究主題無關的內容，是降低噪音的直接做法。'
   },
   {
     id: 'mid-003',
-    category: '基本文字處理',
-    type: '應用題',
-    question: '以下哪一項通常不是去除停用字之後的應用？',
-    options: ['文字雲', '字詞共現圖', '找出討論議題', '句子翻譯'],
-    answer: 3,
-    explanation: '句子翻譯需要保留完整語句資訊，若先去掉停用字，常會破壞原句意思。'
+    category: '資料來源與整理',
+    type: '資料表概念',
+    question: '在 tidy data 的想法中，最理想的資料表結構是什麼？',
+    options: ['一列放多個觀測值，方便摘要', '一欄混合時間、地點與文字內容', '一列一筆觀測、一欄一個變數', '先把所有欄位合併成一個文字欄'],
+    answer: 2,
+    explanation: 'Tidy data 的核心原則是每列對應一筆觀測、每欄對應一個變數，方便後續轉換與分析。'
   },
   {
     id: 'mid-004',
-    category: '基本文字處理',
-    type: '觀念題',
-    question: '有關中文斷詞的敘述，以下何者正確？',
-    options: ['要先標好詞性才來斷詞', '好的斷詞結果常需要輔助詞庫或領域字典', '斷詞前應該先去除停用字', '以上皆非'],
-    answer: 1,
-    explanation: '斷詞通常先於標詞性與停用字處理，而中文斷詞常需要自建詞庫來改善結果。'
+    category: '資料來源與整理',
+    type: '變數判斷',
+    question: '若資料表包含「發文時間、作者、國家、情緒分數」四欄，哪一欄最接近 measure variable？',
+    options: ['發文時間', '作者', '國家', '情緒分數'],
+    answer: 3,
+    explanation: '時間、作者、國家較像描述背景的 dimension variable；情緒分數則較接近真正分析結果或量測值。'
   },
   {
     id: 'mid-005',
-    category: '基本文字處理',
-    type: '細節題',
-    question: '以下哪一個符號通常不是拿來當句子分隔符號？',
-    options: ['、', '。', '；', '？'],
+    category: '資料來源與整理',
+    type: '研究設計',
+    question: '在社群資料蒐集流程中，白名單最主要的功能是什麼？',
+    options: ['保留明確相關的來源或關鍵字', '將每篇文件轉成向量', '估計分類器準確率', '找出最近鄰文件'],
     answer: 0,
-    explanation: '頓號通常用於列舉，不是主要的斷句符號；句號、分號、問號較常作為句界。'
+    explanation: '白名單用來明確保留與研究主題相關的來源、版面或關鍵字，提升資料相關性。'
   },
   {
     id: 'mid-006',
-    category: '基本文字處理',
-    type: '判斷題',
-    question: '以下有關詞性標記的敘述，何者為非？',
-    options: ['每種語言都有詞性', 'JJ 常表示形容詞', 'NN 常表示名詞', 'VB 表示副詞'],
-    answer: 3,
-    explanation: 'VB 代表動詞，不是副詞；副詞常見標記是 RB。'
+    category: '資料來源與整理',
+    type: '資料品質',
+    question: '若評論資料中充滿內容極短、重複貼文與疑似機器人訊息，最直接的風險是什麼？',
+    options: ['會讓資料污染，分析結果失真', '會自動提高模型可解釋性', '會使 IDF 一律變成 0', '會讓 API 轉成 N-gram'],
+    answer: 0,
+    explanation: '短文、機器人與假評論都可能污染資料，進而使情緒分析、主題分析與分類結果偏差。'
   },
   {
     id: 'mid-007',
-    category: '基本文字處理',
-    type: '綜合題',
-    question: '以下有關停用字的敘述何者正確？',
-    options: ['不同語言有不同的停用字集', '若不排除停用字，文字雲裡常會充滿停用字', '為了較好的斷詞結果，有時也會把停用字放進斷詞字典', '以上皆是'],
-    answer: 3,
-    explanation: '停用字的處理會依語言與任務而不同，而且在某些工具流程中，停用字也可能先納入字典以利斷詞。'
+    category: '資料來源與整理',
+    type: '流程題',
+    question: '就整體流程而言，下列何者最合理地描述「先有資料」階段的順序？',
+    options: ['資料來源 -> 抓取 -> 篩選 -> 過濾 -> tidy data', '斷詞 -> NER -> 情緒分析 -> ROC', 'TF-IDF -> KNN -> Precision -> Recall', 'Lemmatization -> API -> Heatmap -> Macro-F1'],
+    answer: 0,
+    explanation: '期中考筆記將資料階段整理為：資料來源、抓取、篩選、過濾，再整理成可分析的 tidy data。'
   },
   {
     id: 'mid-008',
-    category: '基本文字處理',
-    type: '名詞題',
-    question: '以下哪一個概念是把字詞還原成原型（lemma）？',
-    options: ['Stemming', 'POS', 'Lemmatization', 'Word Segmentation'],
-    answer: 2,
-    explanation: 'Lemmatization 是把字詞還原成較標準的字典型態，例如 remaining 變成 remain。'
+    category: '文字前處理',
+    type: '概念題',
+    question: '文字前處理中的 normalization，最接近下列哪一種工作？',
+    options: ['把不同寫法整理成一致形式', '替每個字標上詞性', '將文件分成正負面', '計算 ROC 曲線'],
+    answer: 0,
+    explanation: 'Normalization 是將大小寫、符號、格式等不同寫法統一，讓後續處理更穩定。'
   },
   {
     id: 'mid-009',
-    category: '基本文字處理',
-    type: '比較題',
-    question: '以下關於字詞共現圖的敘述，何者正確？',
-    options: ['高頻字一定會出現在字詞共現圖中', '兩個高頻且常一起出現的字，較可能出現在字詞共現圖中', '一個群聚的字越多，代表這個主題的文件數一定越多', '只要做完斷詞就一定能得到高品質字詞共現圖'],
-    answer: 1,
-    explanation: '字詞共現圖不只看單字高頻，還看彼此共同出現的關係；群聚大不代表該主題文件數一定更多。'
+    category: '文字前處理',
+    type: '細節題',
+    question: '對中文社群文本做斷句時，哪一項最容易造成句界判斷困難？',
+    options: ['標點混用或缺少標點', 'IDF 計算方式不同', 'BERT 參數太多', '資料集標籤太少'],
+    answer: 0,
+    explanation: '中文常有標點混用、口語斷句與缺少標點的情況，會讓 sentence segmentation 更不穩定。'
   },
   {
     id: 'mid-010',
-    category: '基本文字處理',
-    type: '定義題',
-    question: '基本文字資料處理的核心目標，最接近以下哪一項？',
-    options: ['把所有句子都翻譯成英文', '把每篇文章壓縮成最短摘要', '從適當文本中找出重要字詞', '只保留名詞刪除其他詞性'],
-    answer: 2,
-    explanation: '課堂把基本自然語言處理的目標定義為：從適當文本中找出重要字詞。'
+    category: '文字前處理',
+    type: '中英差異',
+    question: '為什麼中文比英文更常需要特別做 word segmentation？',
+    options: ['中文句子一定沒有動詞', '中文文字天然沒有空格分詞', '英文完全不需要前處理', '中文不能做詞性標記'],
+    answer: 1,
+    explanation: '英文通常以空格區分單詞，中文則沒有天然空格，因此分詞特別重要。'
   },
-
   {
     id: 'mid-011',
-    category: '情緒分析',
-    type: '定義題',
-    question: 'Sentiment analysis 的主要目的為何？',
-    options: ['判斷文章、句子或目標的情緒取向', '只找出憤怒與高興等一時情緒', '把句子切成字詞', '找出作者真實身分'],
+    category: '文字前處理',
+    type: '詞典輔助',
+    question: '若斷詞工具總把「行動銀行」切成「行動 / 銀行」，哪一種改善方式最符合課堂觀念？',
+    options: ['加入領域字典或自建詞庫', '先算 Precision', '改成畫 ROC 曲線', '直接刪掉所有停用字'],
     answer: 0,
-    explanation: 'Sentiment analysis 重點在於判斷正負向等評價取向，而不只是描述暫時的情緒種類。'
+    explanation: '中文斷詞常需要領域字典輔助，才能避免把重要複合詞切錯。'
   },
   {
     id: 'mid-012',
-    category: '情緒分析',
-    type: '應用題',
-    question: '在以下哪一種資料中，通常最難直接決定情緒分析的對象？',
-    options: ['廣泛新聞資料', '特定議題討論版留言', '特定產品討論版評論', '品牌專屬客服評論'],
-    answer: 0,
-    explanation: '廣泛新聞常沒有明確單一的情緒對象；但特定議題或產品評論通常有比較清楚的目標。'
+    category: '文字前處理',
+    type: '應用判斷',
+    question: '哪一項任務最不適合在一開始就大量刪除停用字？',
+    options: ['文字雲', '機器翻譯', '字詞共現分析', '關鍵字抽取'],
+    answer: 1,
+    explanation: '翻譯需要保留完整語法與語意關係，過早刪除停用字往往會破壞原句意思。'
   },
   {
     id: 'mid-013',
-    category: '情緒分析',
-    type: '字典題',
-    question: '以下有關 LIWC 字庫的敘述，何者正確？',
-    options: ['LIWC 只分正面與負面', 'LIWC 只有英文版本', 'LIWC 會替每個字給 0 到 1 的情緒強度', 'LIWC 可用來找出主觀句子或主觀字詞線索'],
-    answer: 3,
-    explanation: 'LIWC 不只包含正負向，還有其他心理與語言類別，也不是只有英文字。'
+    category: '文字前處理',
+    type: '名詞比較',
+    question: 'Stemming 與 lemmatization 的主要差別，最接近以下哪一項？',
+    options: ['兩者都只用在中文斷詞', 'Stemming 常較粗略，lemmatization 較接近字典原型', '兩者都等同 POS 標記', 'lemmatization 只用來畫 heatmap'],
+    answer: 1,
+    explanation: 'Stemming 常是機械式截斷字尾；lemmatization 則較傾向還原成正式字典型。'
   },
   {
     id: 'mid-014',
-    category: '情緒分析',
-    type: '字典題',
-    question: '以下有關 NRC 字庫的敘述，何者正確？',
-    options: ['NRC 僅區分正負面', 'NRC 裡每個字可以對應多個類別', 'NRC 只有英文', 'NRC 不包含情緒類別'],
+    category: '文字前處理',
+    type: '例題判斷',
+    question: '若英文單字 remaining 經處理後變成 remain，這最可能是哪一種操作的結果？',
+    options: ['Sentence segmentation', 'Lemmatization', 'Whitelist filtering', 'Specificity'],
     answer: 1,
-    explanation: 'NRC 不只分正負向，也包含 anger、joy、fear、trust 等多種情緒類別，而且一個字可能對應多個類別。'
+    explanation: 'remaining 還原為 remain，屬於詞形還原的典型例子。'
   },
   {
     id: 'mid-015',
-    category: '情緒分析',
-    type: '觀念題',
-    question: '以下哪些詞性的字有可能成為情緒字？',
-    options: ['只有形容詞', '只有動詞', '只有名詞', '形容詞、動詞、名詞都可能'],
-    answer: 3,
-    explanation: '情緒相關詞不只會出現在形容詞，也可能是動詞或名詞。'
+    category: '文字前處理',
+    type: '流程題',
+    question: '下列哪一種順序最符合一般文本處理流程？',
+    options: ['清理格式 -> 斷句 -> 斷詞 -> 停用字處理', 'TF-IDF -> NER -> 抓資料 -> 斷句', '分類 -> 清理格式 -> 斷詞 -> 評估', 'Heatmap -> 停用字 -> API -> 特徵抽取'],
+    answer: 0,
+    explanation: '一般先處理原始格式與符號，再切句、切詞，之後才進入停用字與更進階的語言分析。'
   },
   {
     id: 'mid-016',
-    category: '情緒分析',
-    type: '限制題',
-    question: '情緒分析的字典法較不適合以下哪一種情況？',
-    options: ['Sentence-level 分析', 'Document-level 分析', '諷刺句分析', '產品評論分析'],
-    answer: 2,
-    explanation: '諷刺句常用反話，單靠情緒字典容易誤判。'
+    category: '文字前處理',
+    type: '整併策略',
+    question: '同義字整併或同義字字典的主要目的，最接近下列哪一項？',
+    options: ['減少意思相近但寫法不同造成的分散', '把所有名詞改成動詞', '讓 ROC 一定提高', '取代所有人工標註'],
+    answer: 0,
+    explanation: '同義字整併可以把語意接近但表面寫法不同的詞合併，降低特徵過度分散。'
   },
   {
     id: 'mid-017',
-    category: '詞性與NER',
-    type: '功能題',
-    question: '以下哪些是 Stanford coreNLP NER 可以辨識的實體類型？',
-    options: ['Person', 'Country', 'Ideology', '以上皆是'],
-    answer: 3,
-    explanation: '課堂提到 coreNLP 的 NER 類型相當多，包含 Person、Country、Ideology 等。'
+    category: '語言結構分析',
+    type: '基本概念',
+    question: 'POS 最主要是在補充哪一種資訊？',
+    options: ['字在句子中的語法角色', '文件之間的向量距離', '模型的 AUC', '資料來源是否合法'],
+    answer: 0,
+    explanation: 'POS 會標示詞是名詞、動詞、形容詞等，幫助理解詞在句子中的語法功能。'
   },
   {
     id: 'mid-018',
-    category: '詞性與NER',
-    type: '例題',
-    question: '句子 US officials will visit China next week ... communist China. 中，以下哪個敘述有誤？',
-    options: ['有三個 COUNTRY', '有一個 DATE', '有一個 IDEOLOGY', '有一個 CAUSE_OF_DEATH'],
-    answer: 3,
-    explanation: '該句可以辨識出 COUNTRY、DATE、IDEOLOGY，但沒有 CAUSE_OF_DEATH。'
+    category: '語言結構分析',
+    type: '工具比較',
+    question: '下列哪一組最合理地配對了分析目的與方法？',
+    options: ['找人名與日期 -> NER', '計算稀有度 -> POS', '判斷正負面 -> IDF', '找最近鄰 -> Sentence segmentation'],
+    answer: 0,
+    explanation: 'NER 的目標是辨識人名、日期、國家、組織等具名實體。'
   },
   {
     id: 'mid-019',
-    category: '詞性與NER',
-    type: 'Lemmatization',
-    question: '以下哪個字在 lemmatization 後會與原字不同？',
-    options: ['China', 'remaining', 'trade', 'communist'],
-    answer: 1,
-    explanation: 'remaining 經 lemmatization 後可還原為 remain。'
+    category: '語言結構分析',
+    type: '標註系統',
+    question: 'POS tagset 這個概念，最接近以下哪一項？',
+    options: ['詞性標記的標籤系統', '資料抓取的 API 規格', '文件分類的評估表', '情緒字典的版本號'],
+    answer: 0,
+    explanation: 'Tagset 指的是標記集合，例如 Penn Treebank 或其他中文標註系統所使用的標籤規範。'
   },
   {
     id: 'mid-020',
-    category: '情緒分析',
-    type: '進階字典法',
-    question: '用進階字典法決定句子情緒時，需要考慮哪些因素？',
-    options: ['Sentiment words', 'Amplifier', 'Negation', '以上皆是'],
-    answer: 3,
-    explanation: '進階字典法通常至少要同時考慮情緒字、加強字與否定字。'
+    category: '語言結構分析',
+    type: '序列標註',
+    question: '若一個任務需要對句子中的每個 token 都個別預測標籤，最適合把它視為哪一類任務？',
+    options: ['Sequence labeling', 'Document clustering', 'Cross-validation', 'Keyword scraping'],
+    answer: 0,
+    explanation: 'POS 與 NER 都可視為 sequence labeling，因為需要對序列中的每個 token 預測標籤。'
   },
-
   {
     id: 'mid-021',
-    category: '文件表示',
-    type: '定義題',
-    question: 'Bag of Words 最接近以下哪種文件表示方式？',
-    options: ['用字詞出現次數或是否出現來表示文件', '把句子全部翻譯成向量', '只保留關鍵字的情緒分數', '把作者與日期當成唯一特徵'],
+    category: '語言結構分析',
+    type: 'NER概念',
+    question: '在 NER 中，Entity 最接近下列哪個意思？',
+    options: ['文本中的具名對象或具特定類別的片段', '一篇文件的總字數', '每個特徵的 TF 值', '分類器的學習率'],
     answer: 0,
-    explanation: 'Bag of Words 主要以字詞的出現與次數來表示文件，不直接保留語序結構。'
+    explanation: 'Entity 指的是文字中的具名對象，例如 PERSON、DATE、ORG、COUNTRY 等。'
   },
   {
     id: 'mid-022',
-    category: '文件表示',
-    type: 'TF-IDF概念',
-    question: '使用 TF-IDF 表示文件時，向量的維度和值通常分別代表什麼？',
-    options: ['維度是文件；值是作者', '維度是字詞；值是字詞的重要性', '維度是句子；值是詞性', '維度是情緒；值是主題'],
+    category: '語言結構分析',
+    type: '編碼觀念',
+    question: 'IOB encoding 在 NER 中最常用來表達什麼？',
+    options: ['向量的維度與權重', '某個 token 是否在實體內及是否為開頭', '模型是否過擬合', '文件是否屬於正類'],
     answer: 1,
-    explanation: 'TF-IDF 向量的維度通常是字詞，數值代表該字詞在該文件中的重要程度。'
+    explanation: 'IOB 常用來表示 token 是否位在實體外、實體內，或是實體開頭。'
   },
   {
     id: 'mid-023',
-    category: '文件表示',
-    type: '計算題',
-    question: '某文件 A 有 256 個字，字詞「分析」在其中出現 8 次，則它在文件 A 的 TF 值為何？',
-    options: ['1/8', '1/32', '1/64', '1/16'],
-    answer: 1,
-    explanation: 'TF = 該字在文件中的次數 / 文件總字數 = 8 / 256 = 1/32。'
+    category: '語言結構分析',
+    type: '工具定位',
+    question: '若想同時做詞性標記與命名實體辨識，下列哪種敘述最合理？',
+    options: ['兩者都屬於語言結構分析', '兩者都只是資料抓取', '兩者都等於 TF-IDF', '兩者都只用來算 Accuracy'],
+    answer: 0,
+    explanation: 'POS 與 NER 都是在切詞之後補充更進一步的語言結構資訊。'
   },
   {
     id: 'mid-024',
-    category: '文件表示',
-    type: '計算題',
-    question: '若共有 100000 篇文章，其中「分析」出現在 100 篇文章，則該字的 IDF 約為何？',
-    options: ['2', '8', '1', '3'],
-    answer: 3,
-    explanation: 'IDF = log(100000 / 100) = log(1000) ≈ 3。'
+    category: '文字表示',
+    type: 'BoW概念',
+    question: 'Bag of Words 最重要的限制是什麼？',
+    options: ['不容易保留字詞順序', '不能表示文件是否出現某字', '完全不能做分類', '只適用於影像資料'],
+    answer: 0,
+    explanation: 'BoW 重點在記錄詞是否出現或出現幾次，通常不強調詞序資訊。'
   },
   {
     id: 'mid-025',
-    category: '文件表示',
-    type: '觀念題',
-    question: '以下有關 TF-IDF 的敘述何者正確？',
-    options: ['同一文件裡各字的 TF 值都相同', '同一文件裡各字的 IDF 值都相同', '同一文件裡各字的 TF-IDF 值都相同', '同一個字在不同文件中的 IDF 值相同'],
-    answer: 3,
-    explanation: 'IDF 是字詞層級的全域衡量，跟字在整個語料庫出現的文件數有關，因此同一個字跨文件會共享同一個 IDF。'
+    category: '文字表示',
+    type: 'N-gram概念',
+    question: '若把短語 "social media analysis" 視為特徵，哪一種表示最可能保留這種局部順序資訊？',
+    options: ['Bag of Words 單詞統計', 'Bigram / Trigram', '只保留文件作者', '只算 Accuracy'],
+    answer: 1,
+    explanation: 'N-gram 會保留連續詞序資訊，因此比單純 unigram 更能表達局部片語結構。'
   },
   {
     id: 'mid-026',
-    category: '文件表示',
-    type: '相似度題',
-    question: '若兩篇文件的 TF-IDF 向量完全相同，則下列何者為真？',
-    options: ['Euclidean distance 為 0', 'Cosine similarity 為 1', 'Pearson correlation 為 1', '以上皆是'],
-    answer: 3,
-    explanation: '兩個向量完全相同時，距離為 0、夾角相似為 1、線性相關也為 1。'
+    category: '文字表示',
+    type: 'TF觀念',
+    question: 'TF 主要反映哪一種資訊？',
+    options: ['某詞在單篇文件中的相對常見程度', '某詞在全部文件中的稀有度', '模型在測試集的準確率', '文件的情緒方向'],
+    answer: 0,
+    explanation: 'TF 關心的是該詞在某一篇文件內的出現頻率，屬於局部重要性。'
   },
   {
     id: 'mid-027',
-    category: '文件表示',
-    type: 'N-gram',
-    question: '以下何者不是 n-gram model 的典型應用範圍？',
-    options: ['打字時猜下一個字母', '寫作時建議下一個字或片語', '語音轉文字時提高正確率', '生產良率預測'],
-    answer: 3,
-    explanation: 'n-gram 屬於文字與序列語言模型的應用，不是一般製造良率預測的核心方法。'
+    category: '文字表示',
+    type: 'IDF觀念',
+    question: '若某個字幾乎出現在語料庫中的每一篇文件，則它的 IDF 通常會如何？',
+    options: ['偏低', '偏高', '一定等於 1', '一定等於 Precision'],
+    answer: 0,
+    explanation: 'IDF 衡量字在整體語料中的稀有度，越常見的字區辨力越低，因此 IDF 也越低。'
   },
   {
     id: 'mid-028',
-    category: '文件表示',
-    type: '字詞共現圖',
-    question: '以下有關字詞共現圖（Word Correlation Network）的敘述，何者為偽？',
-    options: ['出現的字詞頻率常需高於某個門檻值', '線連接的兩字詞其相關性常需高於某個門檻值', '降低門檻值可以減少出現的字詞或線', '可以根據文件的 TF-IDF 向量來計算後繪圖'],
-    answer: 2,
-    explanation: '降低門檻通常會讓更多字詞與線被保留下來，而不是更少。'
+    category: '文字表示',
+    type: 'TF-IDF應用',
+    question: 'TF-IDF 最常被視為哪一種用途的基礎表示？',
+    options: ['文件向量化與特徵加權', '資料抓取與白名單建立', '只做詞性標記', '只做模型部署'],
+    answer: 0,
+    explanation: 'TF-IDF 常用來把文字轉成帶權重的向量，供分類、相似度與關鍵字分析使用。'
   },
   {
     id: 'mid-029',
-    category: '文件表示',
-    type: '定義題',
-    question: 'n-gram 最準確的定義為何？',
-    options: ['文本中連續的 n 個項目序列', '文本中出現頻率最高的 n 個字', '一篇文章前 n 句的摘要', '一段文字中所有名詞的集合'],
+    category: '文字表示',
+    type: '矩陣概念',
+    question: '若把很多篇文章一起整理成 document-feature matrix，哪個描述最合理？',
+    options: ['列是文件、欄是特徵', '列是情緒、欄是作者', '列是模型、欄是 API', '列是 ROC、欄是 AUC'],
     answer: 0,
-    explanation: 'n-gram 指的是文本中連續的 n 個 items，可以是字母、詞或其他單位。'
+    explanation: 'Document-feature matrix 會把文件當列、特徵當欄，方便演算法計算。'
   },
   {
     id: 'mid-030',
-    category: '文件表示',
-    type: '語言模型',
-    question: 'n-gram 語言模型主要在做什麼？',
-    options: ['根據作者資訊預測主題', '把文件壓縮為固定長度向量', '根據前面 n-1 個字來預測下一個字', '只用來計算 TF 值'],
-    answer: 2,
-    explanation: 'n-gram language model 的核心是：根據前面若干個字詞，估計下一個字詞的機率。'
+    category: '文字表示',
+    type: '稀疏性',
+    question: '文字資料常被說成高維且稀疏，最主要原因是什麼？',
+    options: ['詞彙表很大，但單篇文件只用到其中少數詞', '每篇文件長度都完全一樣', '所有字詞在每篇文件都會出現', '文本不能轉成數值'],
+    answer: 0,
+    explanation: '文本特徵常以詞彙表展開，維度很高；但任何一篇文件只會使用其中少數詞，因此矩陣大多數位置是 0。'
   },
-
   {
     id: 'mid-031',
-    category: '文件分類',
-    type: '訓練資料題',
-    question: '以下有關文件分類訓練資料集的敘述，何者為非？',
-    options: ['文件需要人工標籤', '可用 TF-IDF 當文件特徵向量', '可表示成 document-term matrix', '一個文件可同時有多個類別'],
-    answer: 3,
-    explanation: '依本課傳統單標籤分類設定，一份訓練文件通常只對應一個類別。'
+    category: '文字表示',
+    type: '特徵值',
+    question: '在 document-feature matrix 中，某一格的 feature value 最可能代表什麼？',
+    options: ['字詞是否出現、詞頻或 TF-IDF 權重', '只可能是文件作者編號', '只可能是類別名稱', '只可能是 ROC 的座標'],
+    answer: 0,
+    explanation: '文件-特徵矩陣中的值可設計成是否出現、詞頻或 TF-IDF 等不同特徵表示。'
   },
   {
     id: 'mid-032',
-    category: '文件分類',
-    type: '資料特性',
-    question: '以下有關文件資料集的敘述何者正確？',
-    options: ['通常文件特徵向量的維度很小', '一個文件裡大部分的特徵值通常為 0', '通常文件的類別會很多很多', '測試時間通常比訓練時間更長'],
-    answer: 1,
-    explanation: '文件以字詞為特徵時，維度高且稀疏，因此大多數特徵值為 0。'
+    category: '探索式分析',
+    type: '關鍵字抽取',
+    question: '若想從大量貼文中找出較具代表性的字詞，哪一種作法最貼近課堂提到的關鍵字抽取概念？',
+    options: ['綜合字詞的重要性後挑出代表字', '只看作者帳號', '只看資料抓取時間', '只把每篇文件長度排序'],
+    answer: 0,
+    explanation: '關鍵字抽取常以詞的重要性為基礎，例如平均 TF-IDF 或每篇 top-k 詞再做統計。'
   },
   {
     id: 'mid-033',
-    category: '文件分類',
-    type: '特徵題',
-    question: '以下哪一種特徵值通常不是直接從文件內容本身取得？',
-    options: ['文件作者', '文件字數', '文件可讀性', '平均句子長度'],
+    category: '探索式分析',
+    type: '視覺化',
+    question: '文字雲最主要想呈現的是什麼？',
+    options: ['字詞的相對重要性或頻率', '模型參數的梯度變化', '文件分類的混淆矩陣', '交叉驗證的切分方式'],
     answer: 0,
-    explanation: '作者屬於 metadata，不一定能從文本內容直接推導；其他項目則通常可從文件內容計算。'
+    explanation: '文字雲通常用字詞大小表現頻率或重要性，是探索資料的直觀視覺化方式。'
   },
   {
     id: 'mid-034',
-    category: '文件分類',
-    type: '方法題',
-    question: '以下哪一種分類方法不需要先訓練出數學分類模型？',
-    options: ['Logistic Regression', 'Decision Tree', 'SVM', 'KNN'],
-    answer: 3,
-    explanation: 'KNN 是 memory-based 方法，分類時直接參考訓練樣本，不像其他方法要先學出參數模型。'
+    category: '探索式分析',
+    type: '共現網路',
+    question: '若兩個詞在同一批文件中常一起出現，最適合用哪一類分析概念來描述這種關係？',
+    options: ['字詞相關或共現關係', '句子分隔符號', 'Logistic loss', 'Whitelist 規則'],
+    answer: 0,
+    explanation: '當兩個詞常共同出現時，可從共現網路或字詞相關分析的角度理解它們的關係。'
   },
   {
     id: 'mid-035',
-    category: '文件分類',
-    type: '效率題',
-    question: '以下哪一種分類方法的分類時間，較容易跟訓練資料集大小成正比？',
-    options: ['Logistic Regression', 'Decision Tree', 'SVM', 'KNN'],
-    answer: 3,
-    explanation: 'KNN 在分類時要查詢訓練集中與測試樣本最接近的文件，因此訓練集越大通常越慢。'
+    category: '探索式分析',
+    type: '相關指標',
+    question: '若把字是否出現視為二元變數，要衡量兩詞是否同步出現，哪個指標最貼近課堂脈絡？',
+    options: ['Phi coefficient', 'Sigmoid function', 'AUC', 'Specificity'],
+    answer: 0,
+    explanation: '課堂將字詞相關視為二元出現模式，可用 phi coefficient 衡量兩詞的關聯程度。'
   },
   {
     id: 'mid-036',
-    category: '文件分類',
-    type: '功能題',
-    question: '通常分類器無法直接提供以下哪一種資訊？',
-    options: ['這份文件屬於哪個類別', '這份文件屬於各類別的機率', '每個特徵的重要性', '哪些特徵一定是多餘的'],
-    answer: 3,
-    explanation: '判斷特徵是否多餘，常需要額外做特徵選擇或共線性分析，不是一般分類器直接保證提供的資訊。'
+    category: '探索式分析',
+    type: '相似度',
+    question: '若兩篇文件內容方向很接近，但長度差很多，哪個相似度指標通常較適合比較它們的文本方向？',
+    options: ['Cosine similarity', 'Sentence segmentation', 'Whitelist', 'Specificity'],
+    answer: 0,
+    explanation: 'Cosine similarity 著重向量方向，常比直接看長度差異的距離更適合比較文本內容方向。'
   },
   {
     id: 'mid-037',
-    category: '文件分類',
-    type: '評估題',
-    question: '以下哪些都可用來衡量分類器效能？',
-    options: ['Specificity', 'Precision', 'Recall', 'Sensitivity', '以上皆是'],
-    answer: 4,
-    explanation: 'Precision、Recall 在資訊檢索與電腦科學常用；Sensitivity、Specificity 在醫學與統計也常用。'
+    category: '探索式分析',
+    type: '時間分析',
+    question: '若想比較某議題在不同月份的討論熱度變化，最接近哪一種分析想法？',
+    options: ['時間趨勢分析', '詞形還原', 'IOB 編碼', 'Random Forest'],
+    answer: 0,
+    explanation: '觀察議題或關鍵字隨時間的變動，屬於時間趨勢分析。'
   },
   {
     id: 'mid-038',
-    category: '文件分類',
-    type: '應用題',
-    question: '若一個 Covid-19 測試劑的目標是「不要漏掉任何一個感染者」，最應優先追求哪個指標？',
-    options: ['Precision 100%', 'Recall 100%', 'Accuracy 100%', 'F1 100%'],
-    answer: 1,
-    explanation: '不要漏掉感染者表示假陰性 FN 要盡量為 0，因此 Recall 需盡量接近 100%。'
+    category: '探索式分析',
+    type: 'Heatmap',
+    question: 'Heatmap 最適合拿來呈現哪種資訊？',
+    options: ['不同變數交叉下的強弱分布', '每個 token 的詞性標籤', 'API 回傳的原始 JSON', '模型訓練的程式碼結構'],
+    answer: 0,
+    explanation: 'Heatmap 透過顏色深淺呈現變數交叉下的大小或強弱分布。'
   },
   {
     id: 'mid-039',
-    category: '文件分類',
-    type: 'ROC題',
-    question: '以下關於 ROC 圖的敘述，何者為非？',
-    options: ['對同一方法而言，sensitivity 越大則 specificity 也越大', '若 recall = 1，則 specificity 可能降到很低', 'ROC 對角線代表隨機猜測表現', 'AUC 可作為 ROC 的整體衡量指標'],
+    category: '任務與情緒分析',
+    type: '任務判斷',
+    question: '若研究目標是把貼文分成「客服抱怨、產品心得、優惠資訊」三類，最適合視為哪一種任務？',
+    options: ['Text classification', 'Sentence segmentation', 'NER', 'Stemming'],
     answer: 0,
-    explanation: 'ROC 圖上 sensitivity 增加時，常伴隨 1-specificity 增加，也就是 specificity 下降。'
+    explanation: '將文本分到預先定義的類別中，屬於文件分類或文字分類任務。'
   },
   {
     id: 'mid-040',
-    category: '文件分類',
-    type: '實務題',
-    question: '使用傳統方法做文件分類時，以下哪項敘述最合理？',
-    options: ['通常需要足夠的訓練資料', '每個類別的文件數不宜太少', '各類別資料量不要差太多通常較理想', '以上皆是'],
-    answer: 3,
-    explanation: '在傳統文本分類中，資料量、各類樣本充足度與類別平衡都會影響模型效果。'
+    category: '任務與情緒分析',
+    type: '概念比較',
+    question: 'Sentiment polarity 最接近下列哪一種意思？',
+    options: ['情緒的正負向取向', '句子的長短結構', '詞性的標記方式', '文件的作者性別'],
+    answer: 0,
+    explanation: 'Sentiment polarity 指的是情緒的正面、負面或中性取向。'
   },
-
   {
     id: 'mid-041',
-    category: 'AI倫理',
-    type: '平台與資訊',
-    question: '以下有關社群平台推薦演算法的敘述，何者正確？',
-    options: ['主要目標是讓使用者更客觀理解事實', '常優先推薦你目前喜歡的內容，可能造成同溫層', '會自然降低群體分化', '主要作用只是提升資料清理品質'],
-    answer: 1,
-    explanation: '課堂強調推薦演算法常強化黏著度與既有偏好，結果可能形成同溫層與分化。'
+    category: '任務與情緒分析',
+    type: '層次判斷',
+    question: '若研究者想判斷「每一句話」各自是正面還是負面，最直接對應哪一種層次？',
+    options: ['Sentence-level sentiment', 'Document-level sentiment', 'Aspect-level sentiment', 'Word segmentation'],
+    answer: 0,
+    explanation: 'Sentence-level sentiment 是對每個句子分別判斷情緒，而不是整篇文件或特定面向。'
   },
   {
     id: 'mid-042',
-    category: 'AI倫理',
-    type: '誤導訊息',
-    question: '以下哪一種做法最符合「誤導的訊息」常見的問題？',
-    options: ['把文本做 TF-IDF 向量化', '把類別不平衡資料重抽樣', '把相關性直接解釋成因果關係', '使用白名單與黑名單'],
-    answer: 2,
-    explanation: '課堂特別指出，將相關性直接說成因果性，是非常常見的誤導方式。'
+    category: '任務與情緒分析',
+    type: '面向情緒',
+    question: '題目問「大家對某品牌客服速度的評價如何？」時，最接近哪一種分析層次？',
+    options: ['Aspect-level sentiment', 'Document similarity', 'Tidy data', 'Cross-validation'],
+    answer: 0,
+    explanation: '客服速度是特定面向，因此較適合 aspect-level sentiment。'
   },
   {
     id: 'mid-043',
-    category: 'AI倫理',
-    type: '倫理觀念',
-    question: '以下哪一項最符合隱私性（Privacy）的倫理概念？',
-    options: ['某些資訊即使揭露不違法，也可能對個人造成傷害', '只要合法就完全沒有倫理疑慮', '隱私只跟醫療資料有關', '隱私與 AI 系統無關'],
+    category: '任務與情緒分析',
+    type: '方法比較',
+    question: '若沒有標註好的正負面文件集，但已有情緒詞典，最自然的起點是哪一種做法？',
+    options: ['字典法', 'KNN 分類法', 'Random Forest', 'Cross-validation'],
     answer: 0,
-    explanation: '課堂強調隱私不只是法律問題，某些揭露即使合法，仍可能對個人帶來實質傷害。'
+    explanation: '沒有標註資料時，較容易先用 lexicon-based 方法；若做分類法則通常需要標註好的訓練資料。'
   },
   {
     id: 'mid-044',
-    category: 'AI倫理',
-    type: '倫理觀念',
-    question: '可究責性（Accountability）最核心在問什麼？',
-    options: ['誰的模型準確率最高', '誰應該為什麼事負責', '誰的資料量最大', '誰的介面最好看'],
-    answer: 1,
-    explanation: 'Accountability 的重點不是技術表現，而是責任歸屬與問責。'
+    category: '任務與情緒分析',
+    type: '情緒元素',
+    question: '在情緒分析中，Opinion Holder 指的是什麼？',
+    options: ['表達意見的人或主體', '被評論的產品面向', '模型的預測門檻', '字典中的停用字'],
+    answer: 0,
+    explanation: 'Opinion Holder 指的是誰在表達這個意見，例如使用者、評論者或作者。'
   },
   {
     id: 'mid-045',
-    category: 'AI倫理',
-    type: '倫理觀念',
-    question: '透明性與可解釋性（Transparency & Explainability）最強調下列哪一組內容？',
-    options: ['只要知道輸入資料量即可', '只要知道模型名稱即可', '只要知道結果正不正確即可', '需要知道風險，並理解建議是如何做出的'],
-    answer: 3,
-    explanation: '透明與可解釋不只看答案本身，還包括風險與決策形成方式。'
+    category: '任務與情緒分析',
+    type: '情緒元素',
+    question: '在 "這台手機的電池續航力很差" 這句話中，最可能的 Feature / Aspect 是什麼？',
+    options: ['電池續航力', '作者名字', '句子標點', '資料來源平台'],
+    answer: 0,
+    explanation: 'Feature / Aspect 指的是情緒指向的產品或事物面向，此句明顯是在評價電池續航力。'
   },
   {
     id: 'mid-046',
-    category: 'AI倫理',
-    type: '倫理觀念',
-    question: '知情同意（Informed Consent）通常包括哪些要素？',
-    options: ['揭露與瞭解', '自主與確認', '只要簽名即可', '揭露、瞭解、自主、確認'],
-    answer: 3,
-    explanation: '課堂將知情同意拆成揭露、瞭解、自主、確認四個要素。'
+    category: '任務與情緒分析',
+    type: '困難現象',
+    question: '在字典法中，哪一類詞最可能直接改變原本情緒方向？',
+    options: ['否定詞', '日期詞', '國家名詞', '句號符號'],
+    answer: 0,
+    explanation: '否定詞如 not、不、沒有 等，常會把原本正向或負向的方向反轉。'
   },
   {
     id: 'mid-047',
-    category: 'AI倫理',
-    type: '公平性',
-    question: '人口學公平性（Demographic Parity）最接近哪個定義？',
-    options: ['不同群體有同等機會被選到', '相似個體應有相似結果', '能力高的人一定要被選到', '所有群體都要有完全相同比例的結果與能力'],
+    category: '任務與情緒分析',
+    type: '困難現象',
+    question: '像 very、a bit、less 這類詞，在情緒分析中最常被視為哪一類訊號？',
+    options: ['程度詞或加強詞', '停用字', '命名實體', '維度變數'],
     answer: 0,
-    explanation: 'Demographic Parity 著重的是不同群體在結果上有相近的被選取機會。'
+    explanation: '這類詞不一定改變方向，但會調整情緒強度，因此常視為 amplifier 或程度詞。'
   },
   {
     id: 'mid-048',
-    category: 'AI倫理',
-    type: '公平性',
-    question: '機會的平等（Equality of Opportunity）最接近以下哪個敘述？',
-    options: ['所有人不看能力都要被選到', '在每個群體中，有能力的人有同等機會被選到', '只保障少數群體', '只要求結果比例相同'],
-    answer: 1,
-    explanation: 'Equality of Opportunity 的重點是：在不同群體裡，符合條件、有能力的人應有相等機會。'
+    category: '任務與情緒分析',
+    type: '方法比較',
+    question: '相較於單純字典法，文件分類法做情緒分析最關鍵的前提是什麼？',
+    options: ['有標註好的訓練資料', '每篇文件都要先翻譯', '每個字都要是名詞', '一定要有 NRC 字典'],
+    answer: 0,
+    explanation: '分類式情緒分析仰賴帶標籤的訓練資料來學習正負面模式。'
   },
   {
     id: 'mid-049',
-    category: 'AI倫理',
-    type: '公平性',
-    question: '個體公平性（Individual Fairness）主要強調什麼？',
-    options: ['少數群體一定要有更多名額', '不同群體要完全相同結果', '類似條件的人應得到類似結果', '所有人都要拿到一樣的分數'],
-    answer: 2,
-    explanation: '個體公平性不是看群體比例，而是看條件相近的個體是否受到相近對待。'
+    category: '模型與分類',
+    type: '方法分類',
+    question: '下列哪一種方法最符合 memory-based classification 的精神？',
+    options: ['KNN', 'Logistic Regression', 'SVM', 'Naive Bayes'],
+    answer: 0,
+    explanation: 'Memory-based 方法不先學顯式數學模型，而是直接參照既有訓練樣本，KNN 是代表方法。'
   },
   {
     id: 'mid-050',
-    category: 'AI倫理',
-    type: '應用題',
-    question: '以下哪些都屬於課堂提到的具爭議 AI 應用？',
-    options: ['通緝犯辨識', '罪犯保釋判斷', '申請者過濾（ATS）', '以上皆是'],
-    answer: 3,
-    explanation: '課堂舉出的爭議 AI 應用包含通緝犯辨識、保釋判斷、ATS，以及行銷／選舉操作等。'
+    category: '模型與分類',
+    type: 'KNN觀念',
+    question: 'KNN 中的 K 值，最直接代表哪個意思？',
+    options: ['分類時參考的最近鄰居數量', '要切成幾個字做斷詞', '模型輸出的類別數', 'TF-IDF 的維度'],
+    answer: 0,
+    explanation: 'KNN 會找距離最近的 K 個樣本來決定新文件類別，因此 K 代表鄰居數量。'
   },
   {
     id: 'mid-051',
-    category: '資料整理',
-    type: 'Tidy Data',
-    question: '以下哪一項最符合 tidy data 的基本原則？',
-    options: ['一列放多筆觀測值以節省空間', '一欄可以同時放時間與數值', '一列一筆觀測、一欄一個變數', '先把所有文字合併成一欄再分析'],
-    answer: 2,
-    explanation: 'Tidy data 的核心是把資料整理成一列一筆觀測、一欄一個變數，方便後續分析與轉換。'
+    category: '模型與分類',
+    type: '模型觀念',
+    question: 'Logistic Regression 中 sigmoid function 的角色最接近下列哪一項？',
+    options: ['把線性分數壓到 0 到 1 之間', '把文件切成句子', '把詞轉成 lemma', '把類別數量變成 K'],
+    answer: 0,
+    explanation: 'Sigmoid 會把線性組合得到的分數轉為 0 到 1 之間，常視為類別機率。'
   },
   {
     id: 'mid-052',
-    category: '資料整理',
-    type: '資料表結構',
-    question: '在 tidy data 的概念中，以下哪一項最接近 dimension variable？',
-    options: ['情緒分數', '貼文按讚數', '發文時間', 'TF-IDF 權重'],
-    answer: 2,
-    explanation: 'Dimension variable 用來描述資料背景或脈絡，例如時間、國家、作者；情緒分數與按讚數較接近 measure variable。'
+    category: '模型與分類',
+    type: '模型家族',
+    question: 'Random Forest 最接近下列哪一種模型家族？',
+    options: ['樹與集成模型', '序列標註模型', '字典法模型', '資料抓取工具'],
+    answer: 0,
+    explanation: 'Random Forest 是把多棵決策樹集成起來的模型，屬於樹與集成方法。'
   },
   {
     id: 'mid-053',
-    category: '基本文字處理',
-    type: '正規化',
-    question: '以下哪一項最接近文字前處理中的 normalization？',
-    options: ['把文本直接分類成主題', '把不同寫法整理成一致格式', '把每個字都轉成詞性標記', '把所有文件轉成 TF-IDF 向量'],
-    answer: 1,
-    explanation: 'Normalization 是把大小寫、符號、格式等不同寫法整理成一致形式，屬於前處理的一部分。'
+    category: '模型與分類',
+    type: '模型家族',
+    question: 'BERT 類模型在課堂脈絡中最接近哪一種方法？',
+    options: ['現代深度語言模型', '停用字字典', '規則式黑名單', '資料表欄位名稱'],
+    answer: 0,
+    explanation: 'BERT 類模型屬於現代深度語言模型，可接不同任務頭進行分類或標註。'
   },
   {
     id: 'mid-054',
-    category: '詞性與NER',
-    type: '觀念題',
-    question: '以下哪一項最能說明 POS 與 NER 的差異？',
-    options: ['POS 找人名，NER 找動詞', 'POS 標記詞在句中的語法角色，NER 找具名實體類別', 'POS 只能用在中文，NER 只能用在英文', '兩者都只是在做斷詞'],
-    answer: 1,
-    explanation: 'POS 關心名詞、動詞、形容詞等語法角色；NER 則辨識人名、日期、國家、組織等具名實體。'
+    category: '模型與分類',
+    type: '資料需求',
+    question: '在傳統文件分類中，若某些類別的樣本量非常少，最常見的風險是什麼？',
+    options: ['模型對少數類別學得不穩', 'TF 一定無法計算', '所有句子都會無法斷詞', 'API 一定失效'],
+    answer: 0,
+    explanation: '樣本過少會讓模型難以學習該類別的穩定特徵，少數類別的效能通常較差。'
   },
   {
     id: 'mid-055',
-    category: '文件表示',
-    type: '特徵矩陣',
-    question: '若把很多篇文件整理成 document-feature matrix，通常列與欄分別代表什麼？',
-    options: ['列是特徵、欄是模型', '列是文件、欄是特徵', '列是情緒、欄是句子', '列是作者、欄是類別'],
-    answer: 1,
-    explanation: 'Document-feature matrix 會把每篇文件排成列、把各個特徵排成欄，方便模型直接讀取。'
+    category: '評估',
+    type: '混淆矩陣',
+    question: '若模型把負類樣本誤判成正類，這在混淆矩陣中屬於哪一種情況？',
+    options: ['False Positive', 'False Negative', 'True Positive', 'True Negative'],
+    answer: 0,
+    explanation: '實際為負、預測為正，屬於 False Positive。'
   },
   {
     id: 'mid-056',
-    category: '文件表示',
-    type: '探索分析',
-    question: '若想衡量兩個詞是否常一起出現在同一批文件中，以下哪個指標最貼近課堂提到的方法？',
-    options: ['Phi coefficient', 'AUC', 'Sigmoid', 'Specificity'],
+    category: '評估',
+    type: '指標關係',
+    question: 'Recall 與下列哪一個指標在二元分類中最接近同義？',
+    options: ['Sensitivity', 'Specificity', 'AUC', 'Precision'],
     answer: 0,
-    explanation: '課堂把字詞相關視為二元出現模式的相關問題，常以 phi coefficient 衡量兩詞是否常一起出現。'
+    explanation: 'Recall 與 Sensitivity 都是在問：真正的正類有多少被模型成功抓到。'
   },
   {
     id: 'mid-057',
-    category: '情緒分析',
-    type: '面向情緒',
-    question: '哪一種情緒分析最適合回答「大家對這支手機的電池續航力是否滿意」？',
-    options: ['Document-level sentiment', 'Sentence segmentation', 'Aspect-level sentiment', 'Named Entity Recognition'],
-    answer: 2,
-    explanation: '題目聚焦在特定產品面向「電池續航力」，因此最適合用 aspect-level sentiment。'
+    category: '評估',
+    type: '指標意義',
+    question: 'Specificity 最主要衡量哪一種能力？',
+    options: ['正確排除負類的能力', '抓到正類的能力', '衡量字詞稀有度', '模型的訓練速度'],
+    answer: 0,
+    explanation: 'Specificity 關心的是所有真正負類中，有多少被模型正確判為負類。'
   },
   {
     id: 'mid-058',
-    category: '情緒分析',
-    type: '情緒元素',
-    question: '在情緒分析裡，Opinion Holder 指的是什麼？',
-    options: ['被評論的產品規格', '表達意見的人或主體', '情緒字的強度分數', '負責標註 NER 的工具'],
-    answer: 1,
-    explanation: 'Opinion Holder 指的是誰在表達這個意見，例如評論者、作者或發言者。'
+    category: '評估',
+    type: '情境判斷',
+    question: '若任務最怕漏掉真正的異常案例，通常應優先觀察哪一個指標？',
+    options: ['Recall', 'Specificity', 'Document similarity', 'IDF'],
+    answer: 0,
+    explanation: '怕漏掉真正異常時，重點是降低 FN，因此通常優先看 Recall。'
   },
   {
     id: 'mid-059',
-    category: '文件分類',
-    type: '模型觀念',
-    question: 'Logistic Regression 中 sigmoid function 的主要作用是什麼？',
-    options: ['把文字切成 token', '把線性分數壓到 0 到 1 之間', '計算 TF-IDF 的 IDF 值', '找出最近的 K 個鄰居'],
-    answer: 1,
-    explanation: 'Logistic Regression 會先得到線性分數，再用 sigmoid 將其轉成 0 到 1 之間的機率值。'
+    category: '評估',
+    type: 'ROC觀念',
+    question: 'ROC 圖上的橫軸最常代表什麼？',
+    options: ['1 - Specificity', 'Precision', 'F1', 'Accuracy'],
+    answer: 0,
+    explanation: 'ROC 圖常以 1-specificity 作為橫軸、sensitivity 作為縱軸。'
   },
   {
     id: 'mid-060',
-    category: '文件分類',
-    type: '混淆矩陣',
-    question: '若模型把負類樣本誤判成正類，這在混淆矩陣中屬於哪一種情況？',
-    options: ['True Positive', 'True Negative', 'False Positive', 'False Negative'],
-    answer: 2,
-    explanation: '實際是負類、卻被模型判成正類，屬於 False Positive。'
+    category: '評估',
+    type: 'AUC觀念',
+    question: 'AUC 最適合被理解為什麼？',
+    options: ['ROC 曲線下面積的整體表現指標', '停用字比例', '每篇文件的平均詞數', '模型的類別數量'],
+    answer: 0,
+    explanation: 'AUC 是 ROC 曲線下面積，常用來概括模型在不同門檻下的整體區辨能力。'
   },
   {
     id: 'mid-061',
-    category: '文件分類',
+    category: '評估',
     type: '多類別評估',
-    question: '以下關於 Macro-F1 的敘述，何者正確？',
-    options: ['先把所有類別的 TP、FP、FN 加總後再算', '依各類別樣本數加權平均', '先算每個類別的 F1，再直接平均', '只適用於二元分類'],
-    answer: 2,
-    explanation: 'Macro-F1 會先分別計算每個類別的 F1，再直接平均，因此較強調各類別一視同仁。'
+    question: 'Macro-F1 最接近哪一種計算方式？',
+    options: ['先算每個類別的 F1，再直接平均', '先把所有類別的 TP、FP、FN 全部加總後再算', '只計算最大類別的 F1', '只適用於二元分類'],
+    answer: 0,
+    explanation: 'Macro-F1 會先算每個類別自己的 F1，再直接平均，因此較重視各類別一視同仁。'
   }
 ];
